@@ -1,9 +1,14 @@
 module DatePicker exposing (Model, Msg, view, init, update, getNow)
 
 import Platform.Cmd as Cmd
-import Html exposing (Html, text)
-import Date exposing (Date, toTime, fromTime, now)
+import Html exposing (Html, text, div)
+import Date exposing (Date, toTime, fromTime, now, year, month, day)
 import Task exposing (perform, map)
+
+import DatePicker.Helpers as Helpers
+
+
+-- MODEL
 
 
 type alias Model =
@@ -46,6 +51,8 @@ initWithDate date =
     }
 
 
+-- UPDATE
+
 type Msg
     = SetSuggesting Date
     | SetSelected Date
@@ -58,9 +65,42 @@ update msg model =
             { model | suggesting = date }
 
         SetSelected date ->
-            { model | selected = date }
+            { model | suggesting = date, selected = date }
+
+
+
+-- VIEW
+
 
 
 view : (Msg -> a) -> Model -> Html a
 view toParentMsg model =
-    text (toString (toTime model.selected))
+    div 
+      []
+      [ viewYear model
+      , viewMonth model
+      , viewDay model
+      ]
+    
+
+viewYear : Model -> Html a
+viewYear model =
+    div 
+      []
+      [ text <| toString <| year model.suggesting ]
+
+
+viewMonth : Model -> Html a 
+viewMonth model =
+    div 
+      []
+      [ text <| toString <| month model.suggesting ]
+
+
+viewDay : Model -> Html a 
+viewDay model =
+    div 
+      []
+      [ text <| toString <| day model.suggesting ]
+
+
