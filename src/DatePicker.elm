@@ -9,6 +9,8 @@ import Task exposing (perform)
 import Array exposing (initialize)
 import DatePicker.Helpers as Helpers
 
+import Debug
+
 
 -- MODEL
 
@@ -127,16 +129,14 @@ viewDay toParentMsg model dayZero =
         day =
             dayZero + 1
 
+        date =
+            Helpers.changeDay day model.suggesting
+
         msg =
-            toParentMsg <| SetSelected <| Helpers.changeDay day model.suggesting
+            toParentMsg <| SetSelected date
 
         highlighted =
-            day
-                == Date.day model.selected
-                && month model.suggesting
-                == month model.selected
-                && year model.suggesting
-                == year model.selected
+            Helpers.equals model.selected date
 
         classes =
             [ ( "DatePickerDay", True )

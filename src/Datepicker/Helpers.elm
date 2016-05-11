@@ -1,6 +1,6 @@
-module DatePicker.Helpers exposing (defaultDate, changeDay, addMonth, daysInMonth)
+module DatePicker.Helpers exposing (defaultDate, equals, changeDay, addMonth, daysInMonth)
 
-import Date exposing (Date, Month, fromTime, fromString, year, month)
+import Date exposing (Date, Month, fromTime, fromString, year, month, day)
 import Result exposing (withDefault)
 import String
 import Debug
@@ -19,6 +19,12 @@ assemble day month year =
         |> fromString
         |> Result.withDefault defaultDate
 
+
+equals : Date -> Date -> Bool
+equals date1 date2 =
+    day date1 == day date2
+    && month date1 == month date2
+    && year date1 == year date2
 
 
 -- Handle days
