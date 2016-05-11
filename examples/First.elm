@@ -9,7 +9,7 @@ import Date exposing (Date, now, toTime, fromTime)
 
 
 main =
-  Html.program { init = init, view = view, update = update, subscriptions = subscriptions }
+    Html.program { init = init, view = view, update = update, subscriptions = subscriptions }
 
 
 
@@ -17,12 +17,12 @@ main =
 
 
 type alias Model =
-  { datepicker : DatePicker.Model }
+    { datepicker : DatePicker.Model }
 
 
 init : ( Model, Cmd Msg )
 init =
-  ( Model DatePicker.init, DatePicker.getNow DatePicker )
+    ( Model DatePicker.init, DatePicker.getNow DatePicker )
 
 
 
@@ -30,18 +30,18 @@ init =
 
 
 type Msg
-  = DatePicker DatePicker.Msg
+    = DatePicker DatePicker.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-  case msg of
-    DatePicker act ->
-      let
-        model =
-          { model | datepicker = DatePicker.update act model.datepicker }
-      in
-        ( model, Cmd.none )
+    case msg of
+        DatePicker act ->
+            let
+                model =
+                    { model | datepicker = DatePicker.update act model.datepicker }
+            in
+                ( model, Cmd.none )
 
 
 
@@ -50,7 +50,7 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Sub.none
+    Sub.none
 
 
 
@@ -59,6 +59,5 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
-  div
-    []
-    [ DatePicker.view DatePicker model.datepicker ]
+    div []
+        [ DatePicker.view DatePicker model.datepicker ]

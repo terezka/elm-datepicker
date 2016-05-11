@@ -3,9 +3,10 @@ module DatePicker exposing (Model, Msg, view, init, update, getNow)
 import Platform.Cmd as Cmd
 import Html exposing (Html, text, div, span)
 import Html.Events exposing (onClick)
+import Html.Attributes exposing (classList)
 import Date exposing (Date, toTime, fromTime, now, year, month, day)
-import Task exposing (perform, map)
-
+import Task exposing (perform)
+import Array exposing (initialize)
 import DatePicker.Helpers as Helpers
 
 
@@ -47,6 +48,7 @@ initWithDate date =
     }
 
 
+
 -- UPDATE
 
 
@@ -69,54 +71,80 @@ update msg model =
 -- VIEW
 
 
-
 view : (Msg -> a) -> Model -> Html a
 view toParentMsg model =
-    div 
-      []
-      [ viewYear model
-      , viewMonth toParentMsg model
-      , viewDays model
-      ]
-    
+    div []
+        [ viewYear model
+        , viewMonth toParentMsg model
+        , viewDays toParentMsg model
+        ]
+
 
 viewYear : Model -> Html a
 viewYear model =
-    div 
-      []
-      [ text <| toString <| year model.suggesting ]
+    div []
+        [ text <| toString <| year model.suggesting ]
 
 
-viewMonth : (Msg -> a) -> Model -> Html a 
+viewMonth : (Msg -> a) -> Model -> Html a
 viewMonth toParentMsg model =
-    let 
-      toMsg =
-        SetSuggesting >> toParentMsg
-      
-      prevMsg = 
-        Helpers.addMonth -1 model.suggesting |> toMsg
+    let
+        toMsg =
+            SetSuggesting >> toParentMsg
 
-      nextMsg = 
-        Helpers.addMonth 1 model.suggesting |> toMsg
-      
-    in 
-      div 
-        []
-        [ span [ onClick prevMsg ] [ text "< " ]
-        , text <| toString <| month model.suggesting
-        , span [ onClick nextMsg ] [ text " >" ]
-        ]
+        prevMsg =
+            Helpers.addMonth -1 model.suggesting |> toMsg
 
-
-viewDays : Model -> Html a 
-viewDays model =
-    let 
-      daysInMonth' = Helpers.daysInMonth model.suggesting
+        nextMsg =
+            Helpers.addMonth 1 model.suggesting |> toMsg
     in
-      div 
-        []
-        [ text <| toString <| day model.suggesting
-        , div [] [ text <| toString <| Helpers.daysInMonth model.suggesting ] 
-        ]
+        div []
+            [ span [ onClick prevMsg ] [ text "< " ]
+            , text <| toString <| month model.suggesting
+            , span [ onClick nextMsg ] [ text " >" ]
+            ]
 
 
+viewDays : (Msg -> a) -> Model -> Html a
+viewDays toParentMsg model =
+    let
+        createDay =
+            viewDay toParentMsg model
+
+        daysInMonth' =
+            Helpers.daysInMonth model.suggesting
+
+        days =
+            Array.toList <| Array.initialize daysInMonth' createDay
+    in
+        div []
+            days
+
+
+viewDay : (Msg -> a) -> Model -> Int -> Html a
+viewDay toParentMsg model dayZero =
+    let
+        day =
+            dayZero + 1
+
+        msg =
+            toParentMsg <| SetSelected <| Helpers.changeDay day model.suggesting
+
+        highlighted =
+            day
+                == Date.day model.selected
+                && month model.suggesting
+                == month model.selected
+                && year model.suggesting
+                == year model.selected
+
+        classes =
+            [ ( "DatePickerDay", True )
+            , ( "DatePickerDayHighLight", highlighted )
+            ]
+    in
+        div
+            [ onClick msg
+            , classList classes
+            ]
+            [ text <| toString <| day ]
