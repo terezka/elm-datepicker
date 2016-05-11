@@ -23,15 +23,8 @@ type alias Model =
 
 getNow : (Msg -> a) -> Cmd a
 getNow toParentMsg =
-    let
-        failed =
-            always SetSelected Helpers.defaultDate
-
-        succeded =
-            SetSelected
-
-        cmd =
-            perform failed succeded Date.now
+    let failed = (\_ -> SetSelected Helpers.defaultDate)
+        cmd = perform failed SetSelected Date.now
     in
         Cmd.map toParentMsg cmd
 
@@ -84,60 +77,37 @@ view toParentMsg model =
 
 viewYear : Model -> Html a
 viewYear model =
-    div []
-        [ text <| toString <| year model.suggesting ]
+    div [] [ text <| toString <| year model.suggesting ]
 
 
 viewMonth : (Msg -> a) -> Model -> Html a
 viewMonth toParentMsg model =
-    let
-        toMsg =
-            SetSuggesting >> toParentMsg
-
-        prevMsg =
-            Helpers.addMonth -1 model.suggesting |> toMsg
-
-        nextMsg =
-            Helpers.addMonth 1 model.suggesting |> toMsg
+    let toMsg = SetSuggesting >> toParentMsg
+        prevMonth = Helpers.addMonth -1 model.suggesting
+        nextMonth = Helpers.addMonth  1 model.suggesting
+        monthString = toString (month model.suggesting)
     in
         div []
-            [ span [ onClick prevMsg ] [ text "< " ]
-            , text <| toString <| month model.suggesting
-            , span [ onClick nextMsg ] [ text " >" ]
+            [ span [ onClick (toMsg prevMonth) ] [ text "< " ]
+            , text monthString
+            , span [ onClick (toMsg nextMonth) ] [ text " >" ]
             ]
 
 
 viewDays : (Msg -> a) -> Model -> Html a
 viewDays toParentMsg model =
-    let
-        createDay =
-            viewDay toParentMsg model
-
-        daysInMonth' =
-            Helpers.daysInMonth model.suggesting
-
-        days =
-            Array.toList <| Array.initialize daysInMonth' createDay
+    let createDay = (\int -> viewDay toParentMsg model (int+1))
+        daysInMonth' = Helpers.daysInMonth model.suggesting
+        days = Array.toList <| Array.initialize daysInMonth' createDay
     in
-        div []
-            days
+        div [] days
 
 
 viewDay : (Msg -> a) -> Model -> Int -> Html a
-viewDay toParentMsg model dayZero =
-    let
-        day =
-            dayZero + 1
-
-        date =
-            Helpers.changeDay day model.suggesting
-
-        msg =
-            toParentMsg <| SetSelected date
-
-        highlighted =
-            Helpers.equals model.selected date
-
+viewDay toParentMsg model day =
+    let date = Helpers.changeDay day model.suggesting
+        msg = toParentMsg (SetSelected date)
+        highlighted = Helpers.equals model.selected date
         classes =
             [ ( "DatePickerDay", True )
             , ( "DatePickerDayHighLight", highlighted )
@@ -147,4 +117,4 @@ viewDay toParentMsg model dayZero =
             [ onClick msg
             , classList classes
             ]
-            [ text <| toString <| day ]
+            [ text (toString day) ]
