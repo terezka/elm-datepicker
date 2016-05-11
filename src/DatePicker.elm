@@ -61,6 +61,6 @@ update msg model =
             { model | selected = date }
 
 
-view : String -> Html Msg
-view output =
-    text output
+view : (Msg -> a) -> Model -> Html a
+view toParentMsg model =
+    text (toString (toTime model.selected))

@@ -17,7 +17,7 @@ main =
 
 
 type alias Model =
-  { date : DatePicker.Model }
+  { datepicker : DatePicker.Model }
 
 
 init : ( Model, Cmd Msg )
@@ -39,7 +39,7 @@ update msg model =
     DatePicker act ->
       let
         model =
-          { model | date = DatePicker.update act model.date }
+          { model | datepicker = DatePicker.update act model.datepicker }
       in
         ( model, Cmd.none )
 
@@ -61,4 +61,4 @@ view : Model -> Html Msg
 view model =
   div
     []
-    [ text ("now: " ++ (toString (toTime model.date.selected))) ]
+    [ DatePicker.view DatePicker model.datepicker ]
