@@ -1,8 +1,9 @@
-module DatePicker.Helpers exposing (defaultDate, addMonth)
+module DatePicker.Helpers exposing (defaultDate, addMonth, daysInMonth)
 
 import Date exposing (Date, Month, fromTime, fromString, year, month)
 import Result exposing (withDefault)
 import Debug
+
 
 defaultDate : Date
 defaultDate =
@@ -45,14 +46,29 @@ addMonth diff date =
         else 
           year0
 
-      test =
-        month0
-        |> Debug.log "month0"
     in
       assemble 1 month1 year1
-        |> Debug.log "assembled"
         |> fromString
         |> Result.withDefault defaultDate
+
+
+daysInMonth : Date -> Int
+daysInMonth date =
+    let 
+      year' = year date
+      month' = month date
+    in
+      case month' of
+        Date.Feb ->
+          if year'%4==0 && year'%100/=0 || year'%400==0 then
+            29
+          else 
+            28
+        Date.Apr -> 30
+        Date.Jun -> 30
+        Date.Sep -> 30
+        Date.Nov -> 30
+        _ -> 31
 
 
 monthAsInt : Month -> Int

@@ -49,6 +49,7 @@ initWithDate date =
 
 -- UPDATE
 
+
 type Msg
     = SetSuggesting Date
     | SetSelected Date
@@ -75,7 +76,7 @@ view toParentMsg model =
       []
       [ viewYear model
       , viewMonth toParentMsg model
-      , viewDay model
+      , viewDays model
       ]
     
 
@@ -107,10 +108,15 @@ viewMonth toParentMsg model =
         ]
 
 
-viewDay : Model -> Html a 
-viewDay model =
-    div 
-      []
-      [ text <| toString <| day model.suggesting ]
+viewDays : Model -> Html a 
+viewDays model =
+    let 
+      daysInMonth' = Helpers.daysInMonth model.suggesting
+    in
+      div 
+        []
+        [ text <| toString <| day model.suggesting
+        , div [] [ text <| toString <| Helpers.daysInMonth model.suggesting ] 
+        ]
 
 
