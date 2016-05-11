@@ -6,61 +6,61 @@ import Date exposing (Date, toTime, fromTime, now)
 import Task exposing (perform, map)
 
 
-type alias Model = 
-  { suggesting : Date
-  , selected : Date
-  }
+type alias Model =
+    { suggesting : Date
+    , selected : Date
+    }
 
 
 defaultDate : Date
 defaultDate =
-  fromTime 0
+    fromTime 0
 
 
 getNow : (Msg -> a) -> Cmd a
-getNow toMessage =
-  let 
-    failed =
-      always SetSelected defaultDate
+getNow toParentMsg =
+    let
+        failed =
+            always SetSelected defaultDate
 
-    succeded = 
-      SetSelected
+        succeded =
+            SetSelected
 
-    cmd =
-      perform failed succeded now
-  in
-    Cmd.map toMessage cmd
+        cmd =
+            perform failed succeded Date.now
+    in
+        Cmd.map toParentMsg cmd
 
 
 init : Model
 init =
-  { suggesting = defaultDate
-  , selected = defaultDate
-  }
+    { suggesting = defaultDate
+    , selected = defaultDate
+    }
 
 
 initWithDate : Date -> Model
 initWithDate date =
-  { suggesting = date
-  , selected = date 
-  }
+    { suggesting = date
+    , selected = date
+    }
 
 
-type Msg 
-  = SetSuggesting Date 
-  | SetSelected Date
+type Msg
+    = SetSuggesting Date
+    | SetSelected Date
 
 
 update : Msg -> Model -> Model
-update msg model = 
-  case msg of
-    SetSuggesting date ->
-      { model | suggesting = date }
+update msg model =
+    case msg of
+        SetSuggesting date ->
+            { model | suggesting = date }
 
-    SetSelected date ->
-      { model | selected = date }
+        SetSelected date ->
+            { model | selected = date }
 
 
 view : String -> Html Msg
 view output =
-  text output
+    text output
