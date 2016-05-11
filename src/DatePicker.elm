@@ -1,7 +1,8 @@
 module DatePicker exposing (Model, Msg, view, init, update, getNow)
 
 import Platform.Cmd as Cmd
-import Html exposing (Html, text, div)
+import Html exposing (Html, text, div, span)
+import Html.Events exposing (onClick)
 import Date exposing (Date, toTime, fromTime, now, year, month, day)
 import Task exposing (perform, map)
 
@@ -17,16 +18,11 @@ type alias Model =
     }
 
 
-defaultDate : Date
-defaultDate =
-    fromTime 0
-
-
 getNow : (Msg -> a) -> Cmd a
 getNow toParentMsg =
     let
         failed =
-            always SetSelected defaultDate
+            always SetSelected Helpers.defaultDate
 
         succeded =
             SetSelected
@@ -39,8 +35,8 @@ getNow toParentMsg =
 
 init : Model
 init =
-    { suggesting = defaultDate
-    , selected = defaultDate
+    { suggesting = Helpers.defaultDate
+    , selected = Helpers.defaultDate
     }
 
 
@@ -78,7 +74,7 @@ view toParentMsg model =
     div 
       []
       [ viewYear model
-      , viewMonth model
+      , viewMonth toParentMsg model
       , viewDay model
       ]
     
@@ -90,11 +86,25 @@ viewYear model =
       [ text <| toString <| year model.suggesting ]
 
 
-viewMonth : Model -> Html a 
-viewMonth model =
-    div 
-      []
-      [ text <| toString <| month model.suggesting ]
+viewMonth : (Msg -> a) -> Model -> Html a 
+viewMonth toParentMsg model =
+    let 
+      toMsg =
+        SetSuggesting >> toParentMsg
+      
+      prevMsg = 
+        Helpers.addMonth -1 model.suggesting |> toMsg
+
+      nextMsg = 
+        Helpers.addMonth 1 model.suggesting |> toMsg
+      
+    in 
+      div 
+        []
+        [ span [ onClick prevMsg ] [ text "< " ]
+        , text <| toString <| month model.suggesting
+        , span [ onClick nextMsg ] [ text " >" ]
+        ]
 
 
 viewDay : Model -> Html a 
