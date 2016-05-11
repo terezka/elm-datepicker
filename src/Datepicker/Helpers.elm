@@ -2,6 +2,7 @@ module DatePicker.Helpers exposing (defaultDate, changeDay, addMonth, daysInMont
 
 import Date exposing (Date, Month, fromTime, fromString, year, month)
 import Result exposing (withDefault)
+import String
 import Debug
 
 
@@ -12,11 +13,9 @@ defaultDate =
 
 assemble : Int -> Int -> Int -> Date
 assemble day month year =
-    (toString month)
-        ++ "/"
-        ++ (toString day)
-        ++ "/"
-        ++ (toString year)
+    [ month, day, year ]
+        |> List.map toString
+        |> String.join "/"
         |> fromString
         |> Result.withDefault defaultDate
 
