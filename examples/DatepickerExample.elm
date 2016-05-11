@@ -1,11 +1,12 @@
+module DatepickerExample exposing (..)
+
 import Html exposing (Html, button, div, text)
 import Html.App as Html
 import Html.Events exposing (onClick)
 import Platform.Sub as Sub
 import Platform.Cmd as Cmd
-import Debug
+
 import DatePicker
-import Date exposing (Date, now, toTime, fromTime)
 
 
 main =
