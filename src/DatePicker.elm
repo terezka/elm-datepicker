@@ -1,7 +1,9 @@
-module DatePicker exposing (view, Msg, init)
+module DatePicker exposing (Model, Msg, view, init, update, getNow)
 
+import Platform.Cmd as Cmd
 import Html exposing (Html, text)
-import Date exposing (Date)
+import Date exposing (Date, toTime, fromTime, now)
+import Task exposing (perform, map)
 
 
 type alias Model = 
@@ -10,8 +12,35 @@ type alias Model =
   }
 
 
-init : Date -> Model
-init date =
+defaultDate : Date
+defaultDate =
+  fromTime 0
+
+
+getNow : (Msg -> a) -> Cmd a
+getNow toMessage =
+  let 
+    failed =
+      always SetSelected defaultDate
+
+    succeded = 
+      SetSelected
+
+    cmd =
+      perform failed succeded now
+  in
+    Cmd.map toMessage cmd
+
+
+init : Model
+init =
+  { suggesting = defaultDate
+  , selected = defaultDate
+  }
+
+
+initWithDate : Date -> Model
+initWithDate date =
   { suggesting = date
   , selected = date 
   }

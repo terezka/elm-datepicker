@@ -3,10 +3,11 @@ import Html.App as Html
 import Html.Events exposing (onClick)
 import Platform.Sub as Sub
 import Platform.Cmd as Cmd
-import Task exposing (perform)
 
---import DatePicker exposing (view, init, Msg)
-import Date exposing (Date, now, toTime)
+import Debug
+
+import DatePicker
+import Date exposing (Date, now, toTime, fromTime)
 
 
 main =
@@ -19,24 +20,12 @@ main =
 
 
 type alias Model =
-  { date : Int }
-
-
-nowCmd : Cmd Msg
-nowCmd =
-  let 
-    failed = 
-      always SetDate 0
-
-    succeded =
-      toTime >> floor >> SetDate
-  in
-    perform failed succeded now
+  { date : DatePicker.Model }
 
 
 init : (Model, Cmd Msg)
 init =
-  (Model 0, nowCmd)
+  (Model DatePicker.init, DatePicker.getNow DatePicker)
 
 
 
@@ -44,13 +33,16 @@ init =
 
 
 
-type Msg = SetDate Int
+type Msg = DatePicker DatePicker.Msg
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    SetDate date ->
-      (Model date, Cmd.none)
+    DatePicker act ->
+      let
+        model = { model | date = DatePicker.update act model.date }
+      in
+        (model, Cmd.none)
 
 
 
@@ -71,6 +63,6 @@ view : Model -> Html Msg
 view model =
   div 
     []
-    [ text ("now: " ++ (toString model.date)) ]
+    [ text ("now: " ++ (toString (toTime model.date.selected))) ]
 
 
