@@ -56,14 +56,14 @@ initWithConfig config =
 
 
 type Msg
-    = SetSuggesting Date
+    = SetFocused Date
     | SetSelected Date
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        SetSuggesting date ->
+        SetFocused date ->
             { model | focused = date }
 
         SetSelected date ->
@@ -98,7 +98,7 @@ viewMonth model =
     in
         div [ classList <| getClasses model Style.MonthMenu ]
             [ span
-                [ onClick (SetSuggesting prevMonth)
+                [ onClick (SetFocused prevMonth)
                 , classList <| getClasses model Style.ArrowLeft ]
                 [ text "< " ]
             , span
@@ -108,7 +108,7 @@ viewMonth model =
                 [ classList <| getClasses model Style.Year ]
                 [ text <| toString <| year model.focused ]
             , span
-                [ onClick (SetSuggesting nextMonth)
+                [ onClick (SetFocused nextMonth)
                 , classList <| getClasses model Style.ArrowRight  ]
                 [ text " >" ]
             ]
