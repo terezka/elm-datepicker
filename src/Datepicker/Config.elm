@@ -6,12 +6,12 @@ import DatePicker.Helpers as Helpers
 
 
 type alias Config =
-    { getStyle : Style.View -> List ( String, String )
+    { getStyle : Style.View -> List ( String, Bool )
     , defaultDate : Date
     }
 
 
-setGetStyle : (Style.View -> List ( String, String )) -> Config -> Config
+setGetStyle : (Style.View -> List ( String, Bool )) -> Config -> Config
 setGetStyle getStyle config =
     { config | getStyle = getStyle }
 

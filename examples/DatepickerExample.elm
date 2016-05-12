@@ -44,11 +44,14 @@ init2 =
         ( Model (DatePicker.initWithConfig config), Cmd.none )
 
 
-getStyle : Style.View -> List ( String, String )
+getStyle : Style.View -> List ( String, Bool )
 getStyle view =
     case view of
         Style.Year ->
-            [ ( "color", "blue" ) ]
+            [ ( "lalalala", True ) ]
+
+        Style.DayHighlight ->
+            [ ( "lalala2", True ) ]
 
         _ ->
             []
