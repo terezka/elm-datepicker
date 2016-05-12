@@ -74,6 +74,7 @@ view toParentMsg model =
         [ style Style.datepicker ]
         [ viewYear model
         , viewMonth toParentMsg model
+        , viewWeekdays
         , viewDays toParentMsg model
         ]
 
@@ -96,6 +97,19 @@ viewMonth toParentMsg model =
             , text monthString
             , span [ onClick (toMsg nextMonth) ] [ text " >" ]
             ]
+
+
+viewWeekdays : Html a 
+viewWeekdays =
+    div []
+        [ div [ style Style.day ] [ text "Ma" ] 
+        , div [ style Style.day ] [ text "Tu" ] 
+        , div [ style Style.day ] [ text "We" ] 
+        , div [ style Style.day ] [ text "Th" ] 
+        , div [ style Style.day ] [ text "Fr" ] 
+        , div [ style Style.day ] [ text "Sa" ] 
+        , div [ style Style.day ] [ text "Su" ] 
+        ]
 
 
 viewDays : (Msg -> a) -> Model -> Html a
