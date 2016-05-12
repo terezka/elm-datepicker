@@ -1,4 +1,4 @@
-module DatePicker exposing (Model, Msg, view, init, update, getNow)
+module DatePicker exposing (Model, Msg, view, init, initWithConfig, update, getNow)
 
 import Platform.Cmd as Cmd
 import Html exposing (Html, text, div, span)
@@ -10,6 +10,7 @@ import Array exposing (initialize)
 
 import DatePicker.Helpers as Helpers
 import DatePicker.Style as Style
+import DatePicker.Config as Config
 
 import Debug
 
@@ -20,6 +21,7 @@ import Debug
 type alias Model =
     { suggesting : Date
     , selected : Date
+    , config : Config.Config
     }
 
 
@@ -35,15 +37,16 @@ init : Model
 init =
     { suggesting = Helpers.defaultDate
     , selected = Helpers.defaultDate
+    , config = Config.defaultConfig
     }
 
 
-initWithDate : Date -> Model
-initWithDate date =
-    { suggesting = date
-    , selected = date
+initWithConfig : Config.Config -> Model
+initWithConfig config =
+    { suggesting = config.defaultDate
+    , selected = config.defaultDate
+    , config = config
     }
-
 
 
 -- UPDATE
@@ -81,7 +84,7 @@ view toParentMsg model =
 
 viewYear : Model -> Html a
 viewYear model =
-    div [ style Style.year ] [ text <| toString <| year model.suggesting ]
+    div [ style (Style.year ++ model.config.getStyle Style.Year) ] [ text <| toString <| year model.suggesting ]
 
 
 viewMonth : (Msg -> a) -> Model -> Html a

@@ -6,11 +6,15 @@ import Html.Events exposing (onClick)
 import Platform.Sub as Sub
 import Platform.Cmd as Cmd
 
+import Date exposing (fromTime)
+
 import DatePicker
+import DatePicker.Config as Config
+import DatePicker.Style as Style
 
 
 main =
-    Html.program { init = init, view = view, update = update, subscriptions = subscriptions }
+    Html.program { init = init2, view = view, update = update, subscriptions = subscriptions }
 
 
 
@@ -23,8 +27,32 @@ type alias Model =
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model DatePicker.init, DatePicker.getNow DatePicker )
+    let 
+        config =
+            Config.defaultConfig
+            |> Config.setGetStyle getStyle
+    in
+        ( Model (DatePicker.initWithConfig config), DatePicker.getNow DatePicker )
 
+
+init2 : ( Model, Cmd Msg )
+init2 =
+    let 
+        config =
+            Config.defaultConfig
+            |> Config.setDefaultDate (fromTime 989887877676)
+    in
+        ( Model (DatePicker.initWithConfig config), Cmd.none )
+
+
+getStyle : Style.View -> List (String, String)
+getStyle view =
+    case view of
+        Style.Year ->
+            [ ("color", "blue")]
+
+        _ ->
+            []
 
 
 -- UPDATE

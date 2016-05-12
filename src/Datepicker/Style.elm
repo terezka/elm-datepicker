@@ -28,3 +28,15 @@ day =
 dayHighlight : List (String, String)
 dayHighlight =
     [ ("color", "red")]
+
+
+
+-- for custom styling 
+
+
+type View
+    = Container
+    | Year
+    | MonthMenu 
+    | Day
+    | DayHighlight
