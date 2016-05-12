@@ -1,7 +1,7 @@
 module DatepickerExample exposing (..)
 
 import Html exposing (Html, button, div, text)
-import Html.App as Html
+import Html.App as App
 import Html.Events exposing (onClick)
 import Platform.Sub as Sub
 import Platform.Cmd as Cmd
@@ -12,7 +12,7 @@ import DatePicker.Style as Style
 
 
 main =
-    Html.program { init = init, view = view, update = update, subscriptions = subscriptions }
+    App.program { init = init, view = view, update = update, subscriptions = subscriptions }
 
 
 
@@ -92,4 +92,4 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
     div []
-        [ DatePicker.view DatePicker model.datepicker ]
+        [ App.map DatePicker (DatePicker.view model.datepicker) ]

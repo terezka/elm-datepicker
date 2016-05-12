@@ -74,22 +74,19 @@ update msg model =
 -- VIEW
 
 
-view : (Msg -> a) -> Model -> Html a
-view toParentMsg model =
+view : Model -> Html Msg
+view model =
     div
         [ classList <| getClasses model Style.Container ]
-        [ viewMonth toParentMsg model
+        [ viewMonth model
         , viewWeekdays model
-        , viewDays toParentMsg model
+        , viewDays model
         ]
 
 
-viewMonth : (Msg -> a) -> Model -> Html a
-viewMonth toParentMsg model =
+viewMonth : Model -> Html Msg
+viewMonth model =
     let
-        toMsg =
-            SetSuggesting >> toParentMsg
-
         prevMonth =
             Helpers.addMonth -1 model.suggesting
 
@@ -101,7 +98,7 @@ viewMonth toParentMsg model =
     in
         div [ classList <| getClasses model Style.MonthMenu ]
             [ span
-                [ onClick (toMsg prevMonth)
+                [ onClick (SetSuggesting prevMonth)
                 , classList <| getClasses model Style.ArrowLeft ]
                 [ text "< " ]
             , span
@@ -111,13 +108,13 @@ viewMonth toParentMsg model =
                 [ classList <| getClasses model Style.Year ]
                 [ text <| toString <| year model.suggesting ]
             , span
-                [ onClick (toMsg nextMonth)
+                [ onClick (SetSuggesting nextMonth)
                 , classList <| getClasses model Style.ArrowRight  ]
                 [ text " >" ]
             ]
 
 
-viewWeekdays : Model -> Html a
+viewWeekdays : Model -> Html Msg
 viewWeekdays model =
     let
       days = [ "Ma", "Tu", "We", "Th", "Fr", "Sa", "Su" ]
@@ -130,11 +127,11 @@ viewWeekdays model =
         (List.map createDay days)
 
 
-viewDays : (Msg -> a) -> Model -> Html a
-viewDays toParentMsg model =
+viewDays : Model -> Html Msg
+viewDays model =
     let
         createDay =
-            viewDay toParentMsg model (Helpers.firstOfSlide model.suggesting)
+            viewDay model (Helpers.firstOfSlide model.suggesting)
 
         days =
             Array.toList (Array.initialize 42 createDay)
@@ -144,14 +141,11 @@ viewDays toParentMsg model =
           days
 
 
-viewDay : (Msg -> a) -> Model -> Date -> Int -> Html a
-viewDay toParentMsg model init diff =
+viewDay : Model -> Date -> Int -> Html Msg
+viewDay model init diff =
     let
         date =
             Helpers.addDay diff init
-
-        msg =
-            toParentMsg (SetSelected date)
 
         highlighted =
             Helpers.equals model.selected date
@@ -172,7 +166,7 @@ viewDay toParentMsg model init diff =
               getClasses model Style.DayNotCurrentMonth
     in
         div
-            [ onClick msg
+            [ onClick (SetSelected date)
             , classList (getClasses model Style.Day ++ highlightClasses ++ notCurrentMonthClasses)
             ]
             [ text (toString (day date)) ]
