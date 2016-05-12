@@ -17,7 +17,7 @@ import Debug
 
 
 type alias Model =
-    { suggesting : Date
+    { focused : Date
     , selected : Date
     , config : Config.Config
     }
@@ -37,7 +37,7 @@ getNow toParentMsg =
 
 init : Model
 init =
-    { suggesting = Helpers.defaultDate
+    { focused = Helpers.defaultDate
     , selected = Helpers.defaultDate
     , config = Config.defaultConfig
     }
@@ -45,7 +45,7 @@ init =
 
 initWithConfig : Config.Config -> Model
 initWithConfig config =
-    { suggesting = config.defaultDate
+    { focused = config.defaultDate
     , selected = config.defaultDate
     , config = config
     }
@@ -64,10 +64,10 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         SetSuggesting date ->
-            { model | suggesting = date }
+            { model | focused = date }
 
         SetSelected date ->
-            { model | suggesting = date, selected = date }
+            { model | focused = date, selected = date }
 
 
 
@@ -88,13 +88,13 @@ viewMonth : Model -> Html Msg
 viewMonth model =
     let
         prevMonth =
-            Helpers.addMonth -1 model.suggesting
+            Helpers.addMonth -1 model.focused
 
         nextMonth =
-            Helpers.addMonth 1 model.suggesting
+            Helpers.addMonth 1 model.focused
 
         monthString =
-            toString (month model.suggesting)
+            toString (month model.focused)
     in
         div [ classList <| getClasses model Style.MonthMenu ]
             [ span
@@ -106,7 +106,7 @@ viewMonth model =
                 [ text monthString ]
             , span
                 [ classList <| getClasses model Style.Year ]
-                [ text <| toString <| year model.suggesting ]
+                [ text <| toString <| year model.focused ]
             , span
                 [ onClick (SetSuggesting nextMonth)
                 , classList <| getClasses model Style.ArrowRight  ]
@@ -131,7 +131,7 @@ viewDays : Model -> Html Msg
 viewDays model =
     let
         createDay =
-            viewDay model (Helpers.firstOfSlide model.suggesting)
+            viewDay model (Helpers.firstOfSlide model.focused)
 
         days =
             Array.toList (Array.initialize 42 createDay)
@@ -157,7 +157,7 @@ viewDay model init diff =
                 []
 
         isCurrentMonth =
-          month date == month model.suggesting
+          month date == month model.focused
 
         notCurrentMonthClasses =
             if isCurrentMonth then
