@@ -3,11 +3,13 @@ module DatePicker exposing (Model, Msg, view, init, update, getNow)
 import Platform.Cmd as Cmd
 import Html exposing (Html, text, div, span)
 import Html.Events exposing (onClick)
-import Html.Attributes exposing (classList)
+import Html.Attributes exposing (style)
 import Date exposing (Date, toTime, fromTime, now, year, month, day)
 import Task exposing (perform)
 import Array exposing (initialize)
+
 import DatePicker.Helpers as Helpers
+import DatePicker.Style as Style
 
 import Debug
 
@@ -68,7 +70,8 @@ update msg model =
 
 view : (Msg -> a) -> Model -> Html a
 view toParentMsg model =
-    div []
+    div 
+        [ style Style.datepicker ]
         [ viewYear model
         , viewMonth toParentMsg model
         , viewDays toParentMsg model
@@ -77,7 +80,7 @@ view toParentMsg model =
 
 viewYear : Model -> Html a
 viewYear model =
-    div [] [ text <| toString <| year model.suggesting ]
+    div [ style Style.year ] [ text <| toString <| year model.suggesting ]
 
 
 viewMonth : (Msg -> a) -> Model -> Html a
@@ -87,7 +90,8 @@ viewMonth toParentMsg model =
         nextMonth = Helpers.addMonth  1 model.suggesting
         monthString = toString (month model.suggesting)
     in
-        div []
+        div 
+            [ style Style.monthMenu ]
             [ span [ onClick (toMsg prevMonth) ] [ text "< " ]
             , text monthString
             , span [ onClick (toMsg nextMonth) ] [ text " >" ]
@@ -96,25 +100,22 @@ viewMonth toParentMsg model =
 
 viewDays : (Msg -> a) -> Model -> Html a
 viewDays toParentMsg model =
-    let createDay = (\int -> viewDay toParentMsg model (int+1))
-        daysInMonth' = Helpers.daysInMonth model.suggesting
+    let date = model.suggesting
+        daysInMonth' = Helpers.daysInMonth date
+        createDay = (\int -> viewDay toParentMsg model date (int+1))
         days = Array.toList <| Array.initialize daysInMonth' createDay
     in
         div [] days
 
 
-viewDay : (Msg -> a) -> Model -> Int -> Html a
-viewDay toParentMsg model day =
+viewDay : (Msg -> a) -> Model -> Date -> Int -> Html a
+viewDay toParentMsg model init day =
     let date = Helpers.changeDay day model.suggesting
         msg = toParentMsg (SetSelected date)
         highlighted = Helpers.equals model.selected date
-        classes =
-            [ ( "DatePickerDay", True )
-            , ( "DatePickerDayHighLight", highlighted )
-            ]
     in
         div
             [ onClick msg
-            , classList classes
+            , style Style.day
             ]
             [ text (toString day) ]

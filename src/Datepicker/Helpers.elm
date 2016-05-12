@@ -85,57 +85,25 @@ daysInMonth date =
                 else
                     28
 
-            Date.Apr ->
-                30
-
-            Date.Jun ->
-                30
-
-            Date.Sep ->
-                30
-
-            Date.Nov ->
-                30
-
-            _ ->
-                31
+            Date.Apr -> 30
+            Date.Jun -> 30
+            Date.Sep -> 30
+            Date.Nov -> 30
+            _ -> 31
 
 
 monthAsInt : Month -> Int
 monthAsInt month =
     case month of
-        Date.Jan ->
-            1
-
-        Date.Feb ->
-            2
-
-        Date.Mar ->
-            3
-
-        Date.Apr ->
-            4
-
-        Date.May ->
-            5
-
-        Date.Jun ->
-            6
-
-        Date.Jul ->
-            7
-
-        Date.Aug ->
-            8
-
-        Date.Sep ->
-            9
-
-        Date.Oct ->
-            10
-
-        Date.Nov ->
-            11
-
-        Date.Dec ->
-            12
+        Date.Jan -> 1
+        Date.Feb -> 2
+        Date.Mar -> 3
+        Date.Apr -> 4
+        Date.May -> 5
+        Date.Jun -> 6
+        Date.Jul -> 7
+        Date.Aug -> 8
+        Date.Sep -> 9
+        Date.Oct -> 10
+        Date.Nov -> 11
+        Date.Dec -> 12
