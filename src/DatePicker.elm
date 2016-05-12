@@ -100,17 +100,19 @@ viewMonth toParentMsg model =
 
 viewDays : (Msg -> a) -> Model -> Html a
 viewDays toParentMsg model =
-    let date = model.suggesting
-        daysInMonth' = Helpers.daysInMonth date
-        createDay = (\int -> viewDay toParentMsg model date (int+1))
-        days = Array.toList <| Array.initialize daysInMonth' createDay
+    let 
+        firstOfSlide' = 
+            Helpers.firstOfSlide model.suggesting
+
+        createDay = viewDay toParentMsg model firstOfSlide'
+        days = Array.toList <| Array.initialize 35 createDay
     in
         div [] days
 
 
 viewDay : (Msg -> a) -> Model -> Date -> Int -> Html a
-viewDay toParentMsg model init day =
-    let date = Helpers.changeDay day model.suggesting
+viewDay toParentMsg model init diff =
+    let date = Helpers.addDay diff init
         msg = toParentMsg (SetSelected date)
         highlighted = Helpers.equals model.selected date
     in
@@ -118,4 +120,4 @@ viewDay toParentMsg model init day =
             [ onClick msg
             , style Style.day
             ]
-            [ text (toString day) ]
+            [ text (toString (day date)) ]

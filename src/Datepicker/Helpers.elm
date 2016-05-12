@@ -1,8 +1,9 @@
-module DatePicker.Helpers exposing (defaultDate, equals, changeDay, addMonth, daysInMonth)
+module DatePicker.Helpers exposing (defaultDate, equals, firstOfSlide, changeDay, addDay, addMonth, daysInMonth)
 
-import Date exposing (Date, Month, fromTime, fromString, year, month, day)
+import Date exposing (Date, Month, fromTime, fromString, year, month, day, dayOfWeek)
 import Result exposing (withDefault)
 import String
+
 import Debug
 
 
@@ -27,6 +28,23 @@ equals date1 date2 =
     && year date1 == year date2
 
 
+firstOfSlide : Date -> Date
+firstOfSlide date =
+    let 
+        first =
+            changeDay 1 date
+
+        prefix = 
+            first
+            |> dayOfWeek
+            |> dayAsInt
+            |> (+) -1
+            |> (*) -1
+    in 
+        addDay prefix first
+
+
+
 -- Handle days
 
 
@@ -34,6 +52,45 @@ changeDay : Int -> Date -> Date
 changeDay day date =
     assemble day (monthAsInt <| month date) (year date)
 
+
+addDay : Int -> Date -> Date
+addDay diff date =
+    let
+        day0 =
+            diff + (day date)
+
+        month0 =
+            month date 
+
+        daysInMonth0 =
+            daysInMonth date
+
+        daysInMonth1 =
+            daysInMonth (addMonth 1 date)
+
+        day1 =
+            if day0 > (daysInMonth0 + daysInMonth1) then
+                day0 - (daysInMonth0 + daysInMonth1)
+            else if day0 > daysInMonth0 then
+                day0 - daysInMonth0
+            else if day0 < 1 then
+                addMonth -1 date
+                |> daysInMonth
+                |> (+) day0
+            else 
+                day0
+
+        rest =
+            if day0 > (daysInMonth0 + daysInMonth1) then
+                addMonth 2 date
+            else if day0 > daysInMonth0 then
+                addMonth 1 date
+            else if day0 < 1 then
+                addMonth -1 date
+            else 
+                date
+    in 
+        assemble day1 (monthAsInt <|month rest) (year rest)
 
 
 -- Handle months
@@ -107,3 +164,16 @@ monthAsInt month =
         Date.Oct -> 10
         Date.Nov -> 11
         Date.Dec -> 12
+
+
+dayAsInt : Date.Day -> Int 
+dayAsInt day =
+    case day of
+        Date.Mon -> 1
+        Date.Tue -> 2
+        Date.Wed -> 3
+        Date.Thu -> 4
+        Date.Fri -> 5
+        Date.Sat -> 6
+        Date.Sun -> 7
+
