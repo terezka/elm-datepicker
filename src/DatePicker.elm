@@ -76,18 +76,12 @@ update msg model =
 
 view : (Msg -> a) -> Model -> Html a
 view toParentMsg model =
-    div [ style <| getStyle model Style.Container ]
-        [ viewYear model
-        , viewMonth toParentMsg model
+    div 
+        [ style <| getStyle model Style.Container ]
+        [ viewMonth toParentMsg model
         , viewWeekdays model
         , viewDays toParentMsg model
         ]
-
-
-viewYear : Model -> Html a
-viewYear model =
-    div [ style <| getStyle model Style.Year ]
-        [ text <| toString <| year model.suggesting ]
 
 
 viewMonth : (Msg -> a) -> Model -> Html a
@@ -106,9 +100,18 @@ viewMonth toParentMsg model =
             toString (month model.suggesting)
     in
         div [ style <| getStyle model Style.MonthMenu ]
-            [ span [ onClick (toMsg prevMonth) ] [ text "< " ]
+            [ span 
+                [ onClick (toMsg prevMonth)
+                , style <| getStyle model Style.ArrowLeft ] 
+                [ text "< " ]
             , text monthString
-            , span [ onClick (toMsg nextMonth) ] [ text " >" ]
+            , span 
+                [ style <| getStyle model Style.Year ]
+                [ text <| toString <| year model.suggesting ]
+            , span 
+                [ onClick (toMsg nextMonth)
+                , style <| getStyle model Style.ArrowRight  ] 
+                [ text " >" ]
             ]
 
 
@@ -169,3 +172,4 @@ getStyle : Model -> Style.View -> List ( String, String )
 getStyle model view =
     Style.getDefaultStyle view
         |> (++) (model.config.getStyle view)
+
