@@ -23,3 +23,8 @@ day =
     , ("display", "inline-block")
     , ("text-align", "center")
     ]
+
+
+dayHighlight : List (String, String)
+dayHighlight =
+    [ ("color", "red")]

@@ -115,9 +115,10 @@ viewDay toParentMsg model init diff =
     let date = Helpers.addDay diff init
         msg = toParentMsg (SetSelected date)
         highlighted = Helpers.equals model.selected date
+        highlightStyle = if highlighted then Style.dayHighlight else [] 
     in
         div
             [ onClick msg
-            , style Style.day
+            , style (Style.day ++ highlightStyle)
             ]
             [ text (toString (day date)) ]
