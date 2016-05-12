@@ -40,6 +40,7 @@ init2 =
     let 
         config =
             Config.defaultConfig
+            |> Config.setGetStyle getStyle
             |> Config.setDefaultDate (fromTime 989887877676)
     in
         ( Model (DatePicker.initWithConfig config), Cmd.none )
