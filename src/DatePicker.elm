@@ -74,7 +74,7 @@ update msg model =
 view : (Msg -> a) -> Model -> Html a
 view toParentMsg model =
     div 
-        [ getStyle model Style.Container ]
+        [ style <| getStyle model Style.Container ]
         [ viewYear model
         , viewMonth toParentMsg model
         , viewWeekdays model
@@ -84,7 +84,7 @@ view toParentMsg model =
 
 viewYear : Model -> Html a
 viewYear model =
-    div [ getStyle model Style.Year ] [ text <| toString <| year model.suggesting ]
+    div [ style <| getStyle model Style.Year ] [ text <| toString <| year model.suggesting ]
 
 
 viewMonth : (Msg -> a) -> Model -> Html a
@@ -95,7 +95,7 @@ viewMonth toParentMsg model =
         monthString = toString (month model.suggesting)
     in
         div 
-            [ getStyle model Style.MonthMenu ]
+            [ style <| getStyle model Style.MonthMenu ]
             [ span [ onClick (toMsg prevMonth) ] [ text "< " ]
             , text monthString
             , span [ onClick (toMsg nextMonth) ] [ text " >" ]
@@ -105,13 +105,13 @@ viewMonth toParentMsg model =
 viewWeekdays : Model -> Html a 
 viewWeekdays model =
     div []
-        [ div [ getStyle model Style.Day ] [ text "Ma" ] 
-        , div [ getStyle model Style.Day ] [ text "Tu" ] 
-        , div [ getStyle model Style.Day ] [ text "We" ] 
-        , div [ getStyle model Style.Day ] [ text "Th" ] 
-        , div [ getStyle model Style.Day ] [ text "Fr" ] 
-        , div [ getStyle model Style.Day ] [ text "Sa" ] 
-        , div [ getStyle model Style.Day ] [ text "Su" ] 
+        [ div [ style <| getStyle model Style.Day ] [ text "Ma" ] 
+        , div [ style <| getStyle model Style.Day ] [ text "Tu" ] 
+        , div [ style <| getStyle model Style.Day ] [ text "We" ] 
+        , div [ style <| getStyle model Style.Day ] [ text "Th" ] 
+        , div [ style <| getStyle model Style.Day ] [ text "Fr" ] 
+        , div [ style <| getStyle model Style.Day ] [ text "Sa" ] 
+        , div [ style <| getStyle model Style.Day ] [ text "Su" ] 
         ]
 
 
@@ -132,19 +132,18 @@ viewDay toParentMsg model init diff =
     let date = Helpers.addDay diff init
         msg = toParentMsg (SetSelected date)
         highlighted = Helpers.equals model.selected date
-        highlightStyle = if highlighted then [] else [] 
+        highlightStyle = if highlighted then (getStyle model Style.DayHighlight) else [] 
     in
         div
             [ onClick msg
-            , getStyle model Style.Day
+            , style <| (getStyle model Style.Day ++ highlightStyle) 
             ]
             [ text (toString (day date)) ]
 
 
-getStyle : Model -> Style.View -> Attribute msg
+getStyle : Model -> Style.View -> List (String, String)
 getStyle model view =
     Style.getDefaultStyle view
     |> (++) (model.config.getStyle view)
-    |> style
 
 
