@@ -119,7 +119,7 @@ viewDays toParentMsg model =
             Helpers.firstOfSlide model.suggesting
 
         createDay = viewDay toParentMsg model firstOfSlide'
-        days = Array.toList <| Array.initialize 35 createDay
+        days = Array.toList <| Array.initialize 42 createDay
     in
         div [] days
 
