@@ -77,7 +77,7 @@ update msg model =
 view : (Msg -> a) -> Model -> Html a
 view toParentMsg model =
     div
-        [ classList <| getStyle model Style.Container ]
+        [ classList <| getClasses model Style.Container ]
         [ viewMonth toParentMsg model
         , viewWeekdays model
         , viewDays toParentMsg model
@@ -99,20 +99,20 @@ viewMonth toParentMsg model =
         monthString =
             toString (month model.suggesting)
     in
-        div [ classList <| getStyle model Style.MonthMenu ]
+        div [ classList <| getClasses model Style.MonthMenu ]
             [ span
                 [ onClick (toMsg prevMonth)
-                , classList <| getStyle model Style.ArrowLeft ]
+                , classList <| getClasses model Style.ArrowLeft ]
                 [ text "< " ]
             , span
-                [ classList <| getStyle model Style.Month ]
+                [ classList <| getClasses model Style.Month ]
                 [ text monthString ]
             , span
-                [ classList <| getStyle model Style.Year ]
+                [ classList <| getClasses model Style.Year ]
                 [ text <| toString <| year model.suggesting ]
             , span
                 [ onClick (toMsg nextMonth)
-                , classList <| getStyle model Style.ArrowRight  ]
+                , classList <| getClasses model Style.ArrowRight  ]
                 [ text " >" ]
             ]
 
@@ -123,10 +123,10 @@ viewWeekdays model =
       days = [ "Ma", "Tu", "We", "Th", "Fr", "Sa", "Su" ]
 
       createDay =
-        (\day -> div [ classList (getStyle model Style.DayType) ] [ text day ] )
+        (\day -> div [ classList (getClasses model Style.DayType) ] [ text day ] )
     in
     div
-        [ classList (getStyle model Style.DayTypes) ]
+        [ classList (getClasses model Style.DayTypes) ]
         (List.map createDay days)
 
 
@@ -140,7 +140,7 @@ viewDays toParentMsg model =
             Array.toList (Array.initialize 42 createDay)
     in
         div
-          [ classList (getStyle model Style.Days) ]
+          [ classList (getClasses model Style.Days) ]
           days
 
 
@@ -158,7 +158,7 @@ viewDay toParentMsg model init diff =
 
         highlightClasses =
             if highlighted then
-                getStyle model Style.DayHighlight
+                getClasses model Style.DayHighlight
             else
                 []
 
@@ -169,22 +169,22 @@ viewDay toParentMsg model init diff =
             if isCurrentMonth then
               []
             else
-              getStyle model Style.DayNotCurrentMonth
+              getClasses model Style.DayNotCurrentMonth
     in
         div
             [ onClick msg
-            , classList (getStyle model Style.Day ++ highlightClasses ++ notCurrentMonthClasses)
+            , classList (getClasses model Style.Day ++ highlightClasses ++ notCurrentMonthClasses)
             ]
             [ text (toString (day date)) ]
 
 
-getStyle : Model -> Style.View -> List ( String, Bool )
-getStyle model view =
+getClasses : Model -> Style.View -> List ( String, Bool )
+getClasses model view =
     let
       custom =
-        model.config.getStyle view
+        model.config.getClasses view
 
       default =
-        Style.getDefaultStyle view
+        Style.getDefaultClasses view
     in
       if List.isEmpty custom then default else custom

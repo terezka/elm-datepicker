@@ -28,7 +28,7 @@ init =
     let
         config =
             Config.defaultConfig
-                |> Config.setGetStyle getStyle
+                |> Config.setGetClasses getClasses
     in
         ( Model (DatePicker.initWithConfig config), DatePicker.getNow DatePicker )
 
@@ -38,14 +38,14 @@ init2 =
     let
         config =
             Config.defaultConfig
-                |> Config.setGetStyle getStyle
+                |> Config.setGetClasses getClasses
                 |> Config.setDefaultDate (fromTime 989887877676)
     in
         ( Model (DatePicker.initWithConfig config), Cmd.none )
 
 
-getStyle : Style.View -> List ( String, Bool )
-getStyle view =
+getClasses : Style.View -> List ( String, Bool )
+getClasses view =
     case view of
         Style.Year ->
             [ ( "lalalala", True ) ]

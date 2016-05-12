@@ -16,8 +16,8 @@ type View
     | DayNotCurrentMonth
 
 
-getDefaultStyle : View -> List ( String, Bool )
-getDefaultStyle view =
+getDefaultClasses : View -> List ( String, Bool )
+getDefaultClasses view =
     case view of
         Container ->
             [ ("datepicker", True) ]
