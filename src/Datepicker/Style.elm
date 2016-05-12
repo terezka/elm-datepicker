@@ -1,32 +1,33 @@
 module DatePicker.Style exposing (..)
 
+
 type View
     = Container
     | Year
-    | MonthMenu 
+    | MonthMenu
     | Day
     | DayHighlight
 
 
-getDefaultStyle : View -> List (String, String)
+getDefaultStyle : View -> List ( String, String )
 getDefaultStyle view =
-    case view of 
+    case view of
         Container ->
-            [ ("padding", "0.25em") 
-            , ("width", "300px")
+            [ ( "padding", "0.25em" )
+            , ( "width", "300px" )
             ]
 
-        Year -> 
-            [ ("text-align", "center")]
+        Year ->
+            [ ( "text-align", "center" ) ]
 
         MonthMenu ->
-            [ ("text-align", "center")]
+            [ ( "text-align", "center" ) ]
 
         Day ->
-            [ ("width", "14.28%") 
-            , ("display", "inline-block")
-            , ("text-align", "center")
+            [ ( "width", "14.28%" )
+            , ( "display", "inline-block" )
+            , ( "text-align", "center" )
             ]
 
         DayHighlight ->
-            [ ("color", "red")]
+            [ ( "color", "red" ) ]

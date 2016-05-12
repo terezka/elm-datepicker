@@ -1,17 +1,17 @@
-module DatePicker.Config exposing (..) 
+module DatePicker.Config exposing (..)
 
 import Date exposing (Date)
-
 import DatePicker.Style as Style
 import DatePicker.Helpers as Helpers
 
-type alias Config = 
-    { getStyle : Style.View -> List (String, String) 
-    , defaultDate : Date 
+
+type alias Config =
+    { getStyle : Style.View -> List ( String, String )
+    , defaultDate : Date
     }
 
 
-setGetStyle : (Style.View -> List (String, String)) -> Config -> Config
+setGetStyle : (Style.View -> List ( String, String )) -> Config -> Config
 setGetStyle getStyle config =
     { config | getStyle = getStyle }
 
