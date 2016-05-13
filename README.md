@@ -2,7 +2,7 @@
 
 *Updated for Elm 0.17* :sparkles:
 
-An now functioning datepicker made in the style of (elm-autocomplete)[https://github.com/thebritican/elm-autocomplete]. Configuration currently includes:
+An now functioning datepicker made in the style of [elm-autocomplete](https://github.com/thebritican/elm-autocomplete). Configuration currently includes:
 
  * option for using default styling or add your own classes 
  * inital date - defaults to current
