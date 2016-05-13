@@ -3,11 +3,14 @@ module DatePicker.Style exposing (..)
 
 type View
     = Container
-    | Year
     | MonthMenu
+    | MonthContainer
     | Month
+    | Year
     | ArrowLeft
+    | ArrowLeftInner
     | ArrowRight
+    | ArrowRightInner
     | DayTypes
     | DayType
     | Days
@@ -34,18 +37,40 @@ getDefaultStyle view =
             [ ( "text-align", "center" )
             , ( "border", "1px solid rgb(224, 224, 224)")
             , ( "margin-bottom", "-1px")
-            , ( "padding", "0.25em" )
+            , ( "padding", "0.5em 0.5em 0.75em 0.5em" )
             , ( "margin-right", "6px" )
             ]
 
         ArrowLeft ->
             [ ( "float", "left" )
-            , ( "padding", "0 0.25em" )
+            , ( "margin-top", "-2px")
+            ]
+
+        ArrowLeftInner ->
+            [ ("width", "0px")
+            , ("height", "0px")
+            , ( "font-size", "1px" )
+            , ("border-top", "7px solid transparent")
+            , ("border-bottom", "7px solid transparent")
+            , ("border-right", "12px solid rgb(102, 102, 102)")
+            , ("border-radius", "2px")
+            , ("vertical-align", "middle")
             ]
 
         ArrowRight ->
             [ ( "float", "right" )
-            , ( "padding", "0 0.25em" )
+            , ( "margin-top", "-2px")
+            ]
+
+        ArrowRightInner ->
+            [ ("width", "0px")
+            , ("height", "0px")
+            , ( "font-size", "1px" )
+            , ("border-top", "7px solid transparent")
+            , ("border-bottom", "7px solid transparent")
+            , ("border-left", "12px solid rgb(102, 102, 102)")
+            , ("border-radius", "2px")
+            , ("vertical-align", "middle")
             ]
 
         Day ->
@@ -61,7 +86,10 @@ getDefaultStyle view =
             ]
 
         DayHighlight ->
-            [ ( "color", "red" ) ]
+            [ ( "background-color", "rgb(224, 224, 224)" ) ]
+
+        DayNotCurrentMonth ->
+            [ ( "opacity", "0.5" )]
 
         _ ->
           []

@@ -98,21 +98,20 @@ viewMonth model =
     in
         div
             [ styling model Style.MonthMenu ]
-            [ span
+            [ div
                 [ styling model Style.ArrowLeft
                 , onClick (SetFocused prevMonth)
                 ]
-                [ text "< " ]
+                [ span [ styling model Style.ArrowLeftInner ] [ text "" ] ]
             , span
-                [ styling model Style.Month ]
-                [ text monthString ]
-            , span
-                [ styling model Style.Year ]
-                [ text <| toString <| year model.focused ]
-            , span
+                [ styling model Style.MonthContainer ]
+                [ span [ styling model Style.Month ] [ text monthString ]
+                , span [ styling model Style.Year ] [ text <| toString <| year model.focused ]
+                ]
+            , div
                 [ styling model Style.ArrowRight
                 , onClick (SetFocused nextMonth) ]
-                [ text " >" ]
+                [ span [ styling model Style.ArrowRightInner ] [ text "" ] ]
             ]
 
 
