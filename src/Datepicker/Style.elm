@@ -25,9 +25,9 @@ getDefaultStyle view =
         Container ->
             [ ( "padding", "0.25em" )
             , ( "width", "300px" )
-            , ( "border-radius", "2px")
+            , ( "border-radius", "2px" )
             , ( "text-align", "center" )
-            , ( "box-sizing", "border-box")
+            , ( "box-sizing", "border-box" )
             ]
 
         Year ->
@@ -35,49 +35,49 @@ getDefaultStyle view =
 
         MonthMenu ->
             [ ( "text-align", "center" )
-            , ( "border", "1px solid rgb(224, 224, 224)")
-            , ( "margin-bottom", "-1px")
+            , ( "border", "1px solid rgb(224, 224, 224)" )
+            , ( "margin-bottom", "-1px" )
             , ( "padding", "0.5em 0.5em 0.75em 0.5em" )
             , ( "margin-right", "6px" )
             ]
 
         ArrowLeft ->
             [ ( "float", "left" )
-            , ( "margin-top", "-2px")
+            , ( "margin-top", "-2px" )
             , ( "cursor", "pointer" )
             ]
 
         ArrowLeftInner ->
-            [ ("width", "0px")
-            , ("height", "0px")
+            [ ( "width", "0px" )
+            , ( "height", "0px" )
             , ( "font-size", "1px" )
-            , ("border-top", "7px solid transparent")
-            , ("border-bottom", "7px solid transparent")
-            , ("border-right", "12px solid rgb(102, 102, 102)")
-            , ("border-radius", "2px")
-            , ("vertical-align", "middle")
+            , ( "border-top", "7px solid transparent" )
+            , ( "border-bottom", "7px solid transparent" )
+            , ( "border-right", "12px solid rgb(102, 102, 102)" )
+            , ( "border-radius", "2px" )
+            , ( "vertical-align", "middle" )
             ]
 
         ArrowRight ->
             [ ( "float", "right" )
-            , ( "margin-top", "-2px")
+            , ( "margin-top", "-2px" )
             , ( "cursor", "pointer" )
             ]
 
         ArrowRightInner ->
-            [ ("width", "0px")
-            , ("height", "0px")
+            [ ( "width", "0px" )
+            , ( "height", "0px" )
             , ( "font-size", "1px" )
-            , ("border-top", "7px solid transparent")
-            , ("border-bottom", "7px solid transparent")
-            , ("border-left", "12px solid rgb(102, 102, 102)")
-            , ("border-radius", "2px")
-            , ("vertical-align", "middle")
+            , ( "border-top", "7px solid transparent" )
+            , ( "border-bottom", "7px solid transparent" )
+            , ( "border-left", "12px solid rgb(102, 102, 102)" )
+            , ( "border-radius", "2px" )
+            , ( "vertical-align", "middle" )
             ]
 
         DayType ->
             [ ( "width", "14.28%" )
-            , ( "box-sizing", "border-box")
+            , ( "box-sizing", "border-box" )
             , ( "display", "inline-block" )
             , ( "text-align", "center" )
             , ( "border", "1px solid rgb(224, 224, 224)" )
@@ -89,7 +89,7 @@ getDefaultStyle view =
 
         Day ->
             [ ( "width", "14.28%" )
-            , ( "box-sizing", "border-box")
+            , ( "box-sizing", "border-box" )
             , ( "display", "inline-block" )
             , ( "text-align", "center" )
             , ( "border", "1px solid rgb(224, 224, 224)" )
@@ -104,7 +104,7 @@ getDefaultStyle view =
             [ ( "background-color", "rgb(224, 224, 224)" ) ]
 
         DayNotCurrentMonth ->
-            [ ( "opacity", "0.5" )]
+            [ ( "opacity", "0.5" ) ]
 
         _ ->
-          []
+            []

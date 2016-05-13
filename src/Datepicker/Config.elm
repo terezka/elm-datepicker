@@ -19,7 +19,7 @@ setGetClasses getClasses config =
 
 setUseDefaultStyles : Bool -> Config -> Config
 setUseDefaultStyles useDefaultStyles config =
-  { config | useDefaultStyles = useDefaultStyles }
+    { config | useDefaultStyles = useDefaultStyles }
 
 
 setDefaultDate : Date -> Config -> Config

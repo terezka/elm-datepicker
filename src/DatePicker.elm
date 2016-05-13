@@ -76,8 +76,7 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div
-        [ styling model Style.Container ]
+    div [ styling model Style.Container ]
         [ viewMonth model
         , viewWeekdays model
         , viewDays model
@@ -96,21 +95,20 @@ viewMonth model =
         monthString =
             toString (month model.focused)
     in
-        div
-            [ styling model Style.MonthMenu ]
+        div [ styling model Style.MonthMenu ]
             [ div
                 [ styling model Style.ArrowLeft
                 , onClick (SetFocused prevMonth)
                 ]
                 [ span [ styling model Style.ArrowLeftInner ] [ text "" ] ]
-            , span
-                [ styling model Style.MonthContainer ]
+            , span [ styling model Style.MonthContainer ]
                 [ span [ styling model Style.Month ] [ text monthString ]
                 , span [ styling model Style.Year ] [ text <| toString <| year model.focused ]
                 ]
             , div
                 [ styling model Style.ArrowRight
-                , onClick (SetFocused nextMonth) ]
+                , onClick (SetFocused nextMonth)
+                ]
                 [ span [ styling model Style.ArrowRightInner ] [ text "" ] ]
             ]
 
@@ -118,14 +116,14 @@ viewMonth model =
 viewWeekdays : Model -> Html Msg
 viewWeekdays model =
     let
-      days = [ "Ma", "Tu", "We", "Th", "Fr", "Sa", "Su" ]
+        days =
+            [ "Ma", "Tu", "We", "Th", "Fr", "Sa", "Su" ]
 
-      createDay =
-        (\day -> div [ styling model Style.DayType ] [ text day ])
+        createDay =
+            (\day -> div [ styling model Style.DayType ] [ text day ])
     in
-      div
-          [ styling model Style.DayTypes ]
-          (List.map createDay days)
+        div [ styling model Style.DayTypes ]
+            (List.map createDay days)
 
 
 viewDays : Model -> Html Msg
@@ -137,9 +135,8 @@ viewDays model =
         days =
             Array.toList (Array.initialize 42 createDay)
     in
-        div
-          [ styling model Style.Days ]
-          days
+        div [ styling model Style.Days ]
+            days
 
 
 viewDay : Model -> Date -> Int -> Html Msg
@@ -152,19 +149,19 @@ viewDay model init diff =
             Helpers.equals model.selected date
 
         isNotCurrentMonth =
-          month date /= month model.focused
+            month date /= month model.focused
 
         styling =
             if model.config.useDefaultStyles then
                 Style.getDefaultStyle Style.Day
-                |> (++) ((?) highlighted (Style.getDefaultStyle Style.DayHighlight))
-                |> (++) ((?) isNotCurrentMonth (Style.getDefaultStyle Style.DayNotCurrentMonth))
-                |> style
+                    |> (++) ((?) highlighted (Style.getDefaultStyle Style.DayHighlight))
+                    |> (++) ((?) isNotCurrentMonth (Style.getDefaultStyle Style.DayNotCurrentMonth))
+                    |> style
             else
                 model.config.getClasses Style.Day
-                |> (++) ((?) highlighted (model.config.getClasses Style.DayHighlight))
-                |> (++) ((?) isNotCurrentMonth (model.config.getClasses Style.DayNotCurrentMonth))
-                |> classList
+                    |> (++) ((?) highlighted (model.config.getClasses Style.DayHighlight))
+                    |> (++) ((?) isNotCurrentMonth (model.config.getClasses Style.DayNotCurrentMonth))
+                    |> classList
     in
         div
             [ styling
@@ -179,7 +176,10 @@ viewDay model init diff =
 
 (?) : Bool -> List a -> List a
 (?) condition ifTrue =
-  if condition then ifTrue else []
+    if condition then
+        ifTrue
+    else
+        []
 
 
 styling : Model -> Style.View -> Attribute a
