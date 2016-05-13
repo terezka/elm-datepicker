@@ -121,7 +121,7 @@ viewWeekdays model =
       days = [ "Ma", "Tu", "We", "Th", "Fr", "Sa", "Su" ]
 
       createDay =
-        (\day -> div [ styling model Style.Day ] [ text day ])
+        (\day -> div [ styling model Style.DayType ] [ text day ])
     in
       div
           [ styling model Style.DayTypes ]

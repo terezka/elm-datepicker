@@ -44,6 +44,7 @@ getDefaultStyle view =
         ArrowLeft ->
             [ ( "float", "left" )
             , ( "margin-top", "-2px")
+            , ( "cursor", "pointer" )
             ]
 
         ArrowLeftInner ->
@@ -60,6 +61,7 @@ getDefaultStyle view =
         ArrowRight ->
             [ ( "float", "right" )
             , ( "margin-top", "-2px")
+            , ( "cursor", "pointer" )
             ]
 
         ArrowRightInner ->
@@ -73,6 +75,18 @@ getDefaultStyle view =
             , ("vertical-align", "middle")
             ]
 
+        DayType ->
+            [ ( "width", "14.28%" )
+            , ( "box-sizing", "border-box")
+            , ( "display", "inline-block" )
+            , ( "text-align", "center" )
+            , ( "border", "1px solid rgb(224, 224, 224)" )
+            , ( "margin-right", "-1px" )
+            , ( "margin-bottom", "-1px" )
+            , ( "padding", "0.25em" )
+            , ( "float", "left" )
+            ]
+
         Day ->
             [ ( "width", "14.28%" )
             , ( "box-sizing", "border-box")
@@ -83,6 +97,7 @@ getDefaultStyle view =
             , ( "margin-bottom", "-1px" )
             , ( "padding", "0.25em" )
             , ( "float", "left" )
+            , ( "cursor", "pointer" )
             ]
 
         DayHighlight ->
