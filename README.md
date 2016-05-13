@@ -1,7 +1,10 @@
 # elm-datepicker
 
-*work in progress*
+*Updated for Elm 0.17* :sparkles:
 
-An (almost) unstyled datepicker for now. Does not give you the option to add your own styles either yet, so rather useless. However, functional! :dizzy:
+An now functioning datepicker made in the style of (elm-autocomplete)[https://github.com/thebritican/elm-autocomplete]. Configuration currently includes:
 
-Updated for Elm 0.17
+ * option for using default styling or add your own classes 
+ * inital date - defaults to current
+ 
+More to come! Functional right now though! :dizzy:
