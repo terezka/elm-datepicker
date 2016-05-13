@@ -1,11 +1,11 @@
 module DatepickerExample exposing (..)
 
-import Html exposing (Html, button, div, text)
+import Html exposing (Html, button, div, text, span)
 import Html.App as App
 import Html.Events exposing (onClick)
 import Platform.Sub as Sub
 import Platform.Cmd as Cmd
-import Date exposing (fromTime)
+import Date exposing (fromTime, day)
 import DatePicker
 import DatePicker.Config as Config
 import DatePicker.Style as Style
@@ -48,7 +48,7 @@ getClasses : Style.View -> List ( String, Bool )
 getClasses view =
     case view of
         Style.Year ->
-            [ ( "lalalala", True ) ]
+            [ ( "lalalaladfdsf", True ) ]
 
         Style.DayHighlight ->
             [ ( "lalala2", True ) ]

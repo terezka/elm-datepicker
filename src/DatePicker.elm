@@ -3,7 +3,7 @@ module DatePicker exposing (Model, Msg, view, init, initWithConfig, update, getN
 import Platform.Cmd as Cmd
 import Html exposing (Html, Attribute, text, div, span)
 import Html.Events exposing (onClick)
-import Html.Attributes exposing (classList)
+import Html.Attributes exposing (classList, style)
 import Date exposing (Date, toTime, fromTime, now, year, month, day)
 import Task exposing (perform)
 import Array exposing (initialize)
@@ -77,7 +77,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div
-        [ classList <| getClasses model Style.Container ]
+        [ styling model Style.Container ]
         [ viewMonth model
         , viewWeekdays model
         , viewDays model
@@ -96,20 +96,22 @@ viewMonth model =
         monthString =
             toString (month model.focused)
     in
-        div [ classList <| getClasses model Style.MonthMenu ]
+        div
+            [ styling model Style.MonthMenu ]
             [ span
-                [ onClick (SetFocused prevMonth)
-                , classList <| getClasses model Style.ArrowLeft ]
+                [ styling model Style.ArrowLeft
+                , onClick (SetFocused prevMonth)
+                ]
                 [ text "< " ]
             , span
-                [ classList <| getClasses model Style.Month ]
+                [ styling model Style.Month ]
                 [ text monthString ]
             , span
-                [ classList <| getClasses model Style.Year ]
+                [ styling model Style.Year ]
                 [ text <| toString <| year model.focused ]
             , span
-                [ onClick (SetFocused nextMonth)
-                , classList <| getClasses model Style.ArrowRight  ]
+                [ styling model Style.ArrowRight
+                , onClick (SetFocused nextMonth) ]
                 [ text " >" ]
             ]
 
@@ -120,11 +122,11 @@ viewWeekdays model =
       days = [ "Ma", "Tu", "We", "Th", "Fr", "Sa", "Su" ]
 
       createDay =
-        (\day -> div [ classList (getClasses model Style.DayType) ] [ text day ] )
+        (\day -> div [ styling model Style.Day ] [ text day ])
     in
-    div
-        [ classList (getClasses model Style.DayTypes) ]
-        (List.map createDay days)
+      div
+          [ styling model Style.DayTypes ]
+          (List.map createDay days)
 
 
 viewDays : Model -> Html Msg
@@ -137,7 +139,7 @@ viewDays model =
             Array.toList (Array.initialize 42 createDay)
     in
         div
-          [ classList (getClasses model Style.Days) ]
+          [ styling model Style.Days ]
           days
 
 
@@ -150,35 +152,40 @@ viewDay model init diff =
         highlighted =
             Helpers.equals model.selected date
 
-        highlightClasses =
-            if highlighted then
-                getClasses model Style.DayHighlight
-            else
-                []
-
         isCurrentMonth =
           month date == month model.focused
 
-        notCurrentMonthClasses =
-            if isCurrentMonth then
-              []
+        styling =
+            if model.config.useDefaultStyles then
+                Style.getDefaultStyle Style.Day
+                |> (++) ((?) highlighted (Style.getDefaultStyle Style.DayHighlight))
+                |> (++) ((?) (not isCurrentMonth) (Style.getDefaultStyle Style.DayNotCurrentMonth))
+                |> style
             else
-              getClasses model Style.DayNotCurrentMonth
+                model.config.getClasses Style.Day
+                |> (++) ((?) highlighted (model.config.getClasses Style.DayHighlight))
+                |> (++) ((?) (not isCurrentMonth) (model.config.getClasses Style.DayNotCurrentMonth))
+                |> classList
     in
         div
-            [ onClick (SetSelected date)
-            , classList (getClasses model Style.Day ++ highlightClasses ++ notCurrentMonthClasses)
+            [ styling
+            , onClick (SetSelected date)
             ]
             [ text (toString (day date)) ]
 
 
-getClasses : Model -> Style.View -> List ( String, Bool )
-getClasses model view =
-    let
-      custom =
-        model.config.getClasses view
 
-      default =
-        Style.getDefaultClasses view
-    in
-      if List.isEmpty custom then default else custom
+-- styling helpers
+
+
+(?) : Bool -> List a -> List a
+(?) condition ifTrue =
+  if condition then ifTrue else []
+
+
+styling : Model -> Style.View -> Attribute a
+styling model view =
+    if model.config.useDefaultStyles then
+        style (Style.getDefaultStyle view)
+    else
+        classList (model.config.getClasses view)

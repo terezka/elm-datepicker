@@ -16,41 +16,52 @@ type View
     | DayNotCurrentMonth
 
 
-getDefaultClasses : View -> List ( String, Bool )
-getDefaultClasses view =
+getDefaultStyle : View -> List ( String, String )
+getDefaultStyle view =
     case view of
         Container ->
-            [ ("datepicker", True) ]
+            [ ( "padding", "0.25em" )
+            , ( "width", "300px" )
+            , ( "border-radius", "2px")
+            , ( "text-align", "center" )
+            , ( "box-sizing", "border-box")
+            ]
 
         Year ->
-            [ ("datepicker__year", True) ]
+            [ ( "padding", "0 0.25em" ) ]
 
         MonthMenu ->
-            [ ("datepicker__month-menu", True) ]
-
-        Month ->
-            [ ("datepicker__month-menu__menu", True ) ]
+            [ ( "text-align", "center" )
+            , ( "border", "1px solid rgb(224, 224, 224)")
+            , ( "margin-bottom", "-1px")
+            , ( "padding", "0.25em" )
+            , ( "margin-right", "6px" )
+            ]
 
         ArrowLeft ->
-            [ ("datepicker__month-menu__arrow-left", True) ]
+            [ ( "float", "left" )
+            , ( "padding", "0 0.25em" )
+            ]
 
         ArrowRight ->
-            [ ("datepicker__month-menu__arrow-right", True) ]
-
-        DayTypes ->
-            [ ("datepicker__day-types", True ) ]
-
-        DayType ->
-            [ ("datepicker__day-types__day", True ) ]
-
-        Days ->
-            [ ("datepicker__days", True) ]
+            [ ( "float", "right" )
+            , ( "padding", "0 0.25em" )
+            ]
 
         Day ->
-            [ ("datepicker__day", True) ]
+            [ ( "width", "14.28%" )
+            , ( "box-sizing", "border-box")
+            , ( "display", "inline-block" )
+            , ( "text-align", "center" )
+            , ( "border", "1px solid rgb(224, 224, 224)" )
+            , ( "margin-right", "-1px" )
+            , ( "margin-bottom", "-1px" )
+            , ( "padding", "0.25em" )
+            , ( "float", "left" )
+            ]
 
         DayHighlight ->
-            [ ("datepicker__day--highlight", True) ]
+            [ ( "color", "red" ) ]
 
-        DayNotCurrentMonth ->
-            [ ("datepicker__day--not-current", True) ]
+        _ ->
+          []
