@@ -111,7 +111,7 @@ addMonth diff date =
             if month0 > 12 then
                 month0 - 12
             else if month0 < 1 then
-                12 - (abs month0)
+                12 + month0
             else
                 month0
 

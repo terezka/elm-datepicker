@@ -151,19 +151,19 @@ viewDay model init diff =
         highlighted =
             Helpers.equals model.selected date
 
-        isCurrentMonth =
-          month date == month model.focused
+        isNotCurrentMonth =
+          month date /= month model.focused
 
         styling =
             if model.config.useDefaultStyles then
                 Style.getDefaultStyle Style.Day
                 |> (++) ((?) highlighted (Style.getDefaultStyle Style.DayHighlight))
-                |> (++) ((?) (not isCurrentMonth) (Style.getDefaultStyle Style.DayNotCurrentMonth))
+                |> (++) ((?) isNotCurrentMonth (Style.getDefaultStyle Style.DayNotCurrentMonth))
                 |> style
             else
                 model.config.getClasses Style.Day
                 |> (++) ((?) highlighted (model.config.getClasses Style.DayHighlight))
-                |> (++) ((?) (not isCurrentMonth) (model.config.getClasses Style.DayNotCurrentMonth))
+                |> (++) ((?) isNotCurrentMonth (model.config.getClasses Style.DayNotCurrentMonth))
                 |> classList
     in
         div
