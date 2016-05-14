@@ -85,7 +85,7 @@ update msg model =
                         Just selectedEnd ->
                             case result of
                                 Just date ->
-                                    if Helpers.isBefore date selectedEnd then
+                                    if Helpers.isBefore selectedEnd date then
                                         { model | selected = Just date }
                                     else
                                         { model | selected = Just date, selectedEnd = Nothing }
@@ -97,8 +97,12 @@ update msg model =
                             { model | selected = result, choice = End }
 
                 End ->
-                    { model | selectedEnd = result }
+                    case model.selected of
+                        Just selected ->
+                            { model | selectedEnd = result }
 
+                        Nothing ->
+                            { model | selectedEnd = result, choice = Start }
                 None ->
                     model
 
