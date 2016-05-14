@@ -1,4 +1,4 @@
-module DatePicker.Helpers exposing (defaultDate, dateAsString, equals, isBefore, inBetween, firstOfSlide, changeDay, addDay, addMonth, daysInMonth)
+module DatePicker.Helpers exposing (defaultDate, dateAsString, equals, isBefore, isBetween, firstOfSlide, changeDay, addDay, addMonth, daysInMonth)
 
 import Date exposing (Date, Month, fromTime, fromString, year, month, day, dayOfWeek)
 import Result exposing (withDefault)
@@ -35,36 +35,21 @@ dateAsString input =
               |> (++) (toString <| day date)
 
         Nothing ->
-            "choose date"
+            "Choose date"
 
 equals : Date -> Date -> Bool
 equals date1 date2 =
-    day date1
-        == day date2
-        && month date1
-        == month date2
-        && year date1
-        == year date2
+    (Date.toTime date1) == (Date.toTime date2)
 
 
 isBefore : Date -> Date -> Bool
 isBefore date1 date2 =
-    year date1
-        >= year date2
-        && (monthAsInt <| month date1)
-        >= (monthAsInt <| month date2)
-        && day date1
-        > day date2
+    (Date.toTime date1) > (Date.toTime date2)
 
 
-inBetween : Date -> Date -> Date -> Bool
-inBetween date1 date2 testing =
-    day date1 <= day testing
-        && day testing <= day date2
-        && (monthAsInt <| month date1) <= (monthAsInt <| month testing)
-        && (monthAsInt <| month testing) <= (monthAsInt <| month date2)
-        && year date1 <= year testing
-        && year testing <= year date2
+isBetween : Date -> Date -> Date -> Bool
+isBetween date1 date2 testing =
+    (isBefore testing date1) && (isBefore date2 testing) || (equals date1 testing) || (equals date2 testing)
 
 
 firstOfSlide : Date -> Date

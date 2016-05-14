@@ -213,7 +213,11 @@ viewDay model init diff =
         highlighted =
             case model.selected of
                 Just selected ->
-                    Helpers.equals selected date
+                    case model.selectedEnd of
+                        Just selectedEnd ->
+                            Helpers.isBetween selected selectedEnd date
+                        Nothing ->
+                            Helpers.equals selected date
                 Nothing ->
                     False
 
