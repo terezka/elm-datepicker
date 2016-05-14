@@ -20,7 +20,7 @@ type Choice = Start | End | None
 
 type alias Model =
     { focused : Date
-    , selecting : Choice
+    , choice : Choice
     , selected : Maybe Date
     , selectedEnd : Maybe Date
     , config : Config.Config
@@ -42,7 +42,7 @@ getNow toParentMsg =
 init : Model
 init =
     { focused = Helpers.defaultDate
-    , selecting = None
+    , choice = None
     , selected = Nothing
     , selectedEnd = Nothing
     , config = Config.defaultConfig
@@ -52,7 +52,7 @@ init =
 initWithConfig : Config.Config -> Model
 initWithConfig config =
     { focused = config.defaultDate
-    , selecting = None
+    , choice = None
     , selected = Nothing
     , selectedEnd = Nothing
     , config = config
@@ -76,18 +76,32 @@ update msg model =
             { model | focused = date }
 
         SetSelecting choice ->
-            { model | selecting = choice }
+            { model | choice = choice }
 
-        SetSelected choice date ->
+        SetSelected choice result ->
             case choice of
                 Start ->
-                    { model | selected = date }
+                    case model.selectedEnd of
+                        Just selectedEnd ->
+                            case result of
+                                Just date ->
+                                    if Helpers.isBefore date selectedEnd then
+                                        { model | selected = Just date }
+                                    else
+                                        { model | selected = Just date, selectedEnd = Nothing }
+
+                                Nothing ->
+                                    { model | selected = Nothing }
+
+                        Nothing ->
+                            { model | selected = result, choice = End }
 
                 End ->
-                    { model | selectedEnd = date }
+                    { model | selectedEnd = result }
 
                 None ->
                     model
+
 
 
 
@@ -206,16 +220,19 @@ viewDay model init diff =
                     |> (++) ((?) highlighted (model.config.getClasses Style.DayHighlight))
                     |> (++) ((?) isNotCurrentMonth (model.config.getClasses Style.DayNotCurrentMonth))
                     |> classList
+
+        choice =
+            getChoice model date
     in
         div
             [ styling
-            , onClick (SetSelected model.selecting <| Just date)
+            , onClick (SetSelected choice <| Just date)
             ]
             [ text (toString (day date)) ]
 
 
 
--- styling helpers
+-- styling helpers + more
 
 
 (?) : Bool -> List a -> List a
@@ -232,3 +249,16 @@ styling model view =
         style (Style.getDefaultStyle view)
     else
         classList (model.config.getClasses view)
+
+
+getChoice : Model -> Date -> Choice
+getChoice model date =
+    case model.selected of
+        Just selected ->
+            case model.choice of
+                End ->
+                    if Helpers.isBefore selected date then Start else End
+                _ ->
+                    model.choice
+        Nothing ->
+            model.choice

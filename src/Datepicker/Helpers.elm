@@ -1,9 +1,12 @@
-module DatePicker.Helpers exposing (defaultDate, dateAsString, equals, inBetween, firstOfSlide, changeDay, addDay, addMonth, daysInMonth)
+module DatePicker.Helpers exposing (defaultDate, dateAsString, equals, isBefore, inBetween, firstOfSlide, changeDay, addDay, addMonth, daysInMonth)
 
 import Date exposing (Date, Month, fromTime, fromString, year, month, day, dayOfWeek)
 import Result exposing (withDefault)
 import String
 import Debug
+
+
+-- Date stuff
 
 
 defaultDate : Date
@@ -42,6 +45,16 @@ equals date1 date2 =
         == month date2
         && year date1
         == year date2
+
+
+isBefore : Date -> Date -> Bool
+isBefore date1 date2 =
+    year date1
+        >= year date2
+        && (monthAsInt <| month date1)
+        >= (monthAsInt <| month date2)
+        && day date1
+        > day date2
 
 
 inBetween : Date -> Date -> Date -> Bool
