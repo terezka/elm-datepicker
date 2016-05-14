@@ -101,7 +101,7 @@ getDefaultStyle view =
             ]
 
         DayHighlight ->
-            [ ( "background-color", "rgb(224, 224, 224)" ) ]
+            [ ( "background-color", "rgb(234, 234, 234)" ) ]
 
         DayNotCurrentMonth ->
             [ ( "opacity", "0.5" ) ]
