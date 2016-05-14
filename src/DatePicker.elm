@@ -226,9 +226,9 @@ viewWeekdays model =
             [ "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su" ]
 
         createDay =
-            (\day -> div [ styling model Style.DayType ] [ text day ])
+            (\day -> div [ styling model Style.WeekDay ] [ text day ])
     in
-        div [ styling model Style.DayTypes ]
+        div [ styling model Style.WeekDays ]
             (List.map createDay days)
 
 

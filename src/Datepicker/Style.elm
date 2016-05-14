@@ -18,8 +18,8 @@ type View
     | ArrowLeftInner
     | ArrowRight
     | ArrowRightInner
-    | DayTypes
-    | DayType
+    | WeekDays
+    | WeekDay
     | Days
     | Day
     | DayHighlight
@@ -138,7 +138,7 @@ getDefaultStyle view =
             , ( "vertical-align", "middle" )
             ]
 
-        DayType ->
+        WeekDay ->
             [ ( "width", "14.28%" )
             , ( "box-sizing", "border-box" )
             , ( "display", "inline-block" )
