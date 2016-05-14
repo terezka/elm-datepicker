@@ -42,7 +42,7 @@ getNow toParentMsg =
 init : Model
 init =
     { focused = Helpers.defaultDate
-    , choice = None
+    , choice = Start
     , selected = Nothing
     , selectedEnd = Nothing
     , config = Config.defaultConfig
@@ -52,7 +52,7 @@ init =
 initWithConfig : Config.Config -> Model
 initWithConfig config =
     { focused = config.defaultDate
-    , choice = None
+    , choice = Start
     , selected = Nothing
     , selectedEnd = Nothing
     , config = config
