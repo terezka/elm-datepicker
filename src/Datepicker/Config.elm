@@ -9,6 +9,7 @@ type alias Config =
     { getClasses : Style.View -> List ( String, Bool )
     , useDefaultStyles : Bool
     , defaultDate : Date
+    , useRange : Bool
     }
 
 
@@ -27,9 +28,15 @@ setDefaultDate defaultDate config =
     { config | defaultDate = defaultDate }
 
 
+setUseRange : Bool -> Config -> Config
+setUseRange useRange config =
+    { config | useRange = useRange }
+
+
 defaultConfig : Config
 defaultConfig =
     { getClasses = always []
     , useDefaultStyles = True
     , defaultDate = Helpers.defaultDate
+    , useRange = False
     }

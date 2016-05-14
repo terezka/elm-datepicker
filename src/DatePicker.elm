@@ -18,7 +18,8 @@ import Debug
 
 type alias Model =
     { focused : Date
-    , selected : Date
+    , selected : Maybe Date
+    , selectedEnd : Maybe Date
     , config : Config.Config
     }
 
@@ -27,10 +28,10 @@ getNow : (Msg -> a) -> Cmd a
 getNow toParentMsg =
     let
         failed =
-            (\_ -> SetSelected Helpers.defaultDate)
+            (\_ -> SetFocused Helpers.defaultDate)
 
         cmd =
-            perform failed SetSelected Date.now
+            perform failed SetFocused Date.now
     in
         Cmd.map toParentMsg cmd
 
@@ -38,7 +39,8 @@ getNow toParentMsg =
 init : Model
 init =
     { focused = Helpers.defaultDate
-    , selected = Helpers.defaultDate
+    , selected = Nothing
+    , selectedEnd = Nothing
     , config = Config.defaultConfig
     }
 
@@ -46,7 +48,8 @@ init =
 initWithConfig : Config.Config -> Model
 initWithConfig config =
     { focused = config.defaultDate
-    , selected = config.defaultDate
+    , selected = Nothing
+    , selectedEnd = Nothing
     , config = config
     }
 
@@ -57,7 +60,8 @@ initWithConfig config =
 
 type Msg
     = SetFocused Date
-    | SetSelected Date
+    | SetSelected (Maybe Date)
+    | SetSelectedEnd (Maybe Date)
 
 
 update : Msg -> Model -> Model
@@ -67,8 +71,10 @@ update msg model =
             { model | focused = date }
 
         SetSelected date ->
-            { model | focused = date, selected = date }
+            { model | selected = date }
 
+        SetSelectedEnd date ->
+            { model | selectedEnd = date }
 
 
 -- VIEW
@@ -76,11 +82,18 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ styling model Style.Container ]
-        [ viewMonth model
-        , viewWeekdays model
-        , viewDays model
+    div []
+        [ div
+            []
+            [ text (Helpers.dateAsString model.selected) ]
+        , div
+            [ styling model Style.Container ]
+            [ viewMonth model
+            , viewWeekdays model
+            , viewDays model
+            ]
         ]
+
 
 
 viewMonth : Model -> Html Msg
@@ -100,7 +113,7 @@ viewMonth model =
                 [ styling model Style.ArrowLeft
                 , onClick (SetFocused prevMonth)
                 ]
-                [ span [ styling model Style.ArrowLeftInner ] [ text "" ] ]
+                [ span [ styling model Style.ArrowLeftInner ] [ ] ]
             , span [ styling model Style.MonthContainer ]
                 [ span [ styling model Style.Month ] [ text monthString ]
                 , span [ styling model Style.Year ] [ text <| toString <| year model.focused ]
@@ -109,7 +122,7 @@ viewMonth model =
                 [ styling model Style.ArrowRight
                 , onClick (SetFocused nextMonth)
                 ]
-                [ span [ styling model Style.ArrowRightInner ] [ text "" ] ]
+                [ span [ styling model Style.ArrowRightInner ] [ ] ]
             ]
 
 
@@ -146,7 +159,12 @@ viewDay model init diff =
             Helpers.addDay diff init
 
         highlighted =
-            Helpers.equals model.selected date
+            case model.selected of
+                Just selected ->
+                    Helpers.equals selected date
+                Nothing ->
+                    False
+
 
         isNotCurrentMonth =
             month date /= month model.focused
@@ -165,7 +183,7 @@ viewDay model init diff =
     in
         div
             [ styling
-            , onClick (SetSelected date)
+            , onClick (SetSelected <| Just date)
             ]
             [ text (toString (day date)) ]
 

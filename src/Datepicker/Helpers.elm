@@ -1,4 +1,4 @@
-module DatePicker.Helpers exposing (defaultDate, equals, firstOfSlide, changeDay, addDay, addMonth, daysInMonth)
+module DatePicker.Helpers exposing (defaultDate, dateAsString, equals, inBetween, firstOfSlide, changeDay, addDay, addMonth, daysInMonth)
 
 import Date exposing (Date, Month, fromTime, fromString, year, month, day, dayOfWeek)
 import Result exposing (withDefault)
@@ -20,6 +20,20 @@ assemble day month year =
         |> Result.withDefault defaultDate
 
 
+dateAsString : Maybe Date -> String
+dateAsString input =
+    case input of
+        Just date ->
+            year date
+              |> toString
+              |> (++) " "
+              |> (++) (toString <| month date)
+              |> (++) " "
+              |> (++) (toString <| day date)
+
+        Nothing ->
+            "choose date"
+
 equals : Date -> Date -> Bool
 equals date1 date2 =
     day date1
@@ -28,6 +42,16 @@ equals date1 date2 =
         == month date2
         && year date1
         == year date2
+
+
+inBetween : Date -> Date -> Date -> Bool
+inBetween date1 date2 testing =
+    day date1 <= day testing
+        && day testing <= day date2
+        && (monthAsInt <| month date1) <= (monthAsInt <| month testing)
+        && (monthAsInt <| month testing) <= (monthAsInt <| month date2)
+        && year date1 <= year testing
+        && year testing <= year date2
 
 
 firstOfSlide : Date -> Date
