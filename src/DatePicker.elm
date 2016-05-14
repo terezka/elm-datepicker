@@ -223,7 +223,7 @@ viewWeekdays : Model -> Html Msg
 viewWeekdays model =
     let
         days =
-            [ "Ma", "Tu", "We", "Th", "Fr", "Sa", "Su" ]
+            [ "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su" ]
 
         createDay =
             (\day -> div [ styling model Style.DayType ] [ text day ])
