@@ -23,8 +23,8 @@ assemble day month year =
         |> Result.withDefault defaultDate
 
 
-dateAsString : Maybe Date -> String
-dateAsString input =
+dateAsString : String -> Maybe Date -> String
+dateAsString placeholder input =
     case input of
         Just date ->
             year date
@@ -35,7 +35,7 @@ dateAsString input =
               |> (++) (toString <| day date)
 
         Nothing ->
-            "Choose date"
+            placeholder
 
 equals : Date -> Date -> Bool
 equals date1 date2 =

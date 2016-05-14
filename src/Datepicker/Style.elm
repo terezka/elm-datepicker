@@ -3,6 +3,13 @@ module DatePicker.Style exposing (..)
 
 type View
     = Container
+    | InputsContainer
+    | InputContainer
+    | InputLabel
+    | Input
+    | InputDisplayTextContainer
+    | InputDisplayText
+    | DatepickerContainer
     | MonthMenu
     | MonthContainer
     | Month
@@ -30,8 +37,61 @@ getDefaultStyle view =
             , ( "box-sizing", "border-box" )
             ]
 
-        Year ->
-            [ ( "padding", "0 0.25em" ) ]
+        InputsContainer ->
+            [ ( "position", "relative" )
+            , ( "height", "100%" )
+            , ( "box-sizing", "border-box" )
+            ]
+
+        InputContainer ->
+            [ ( "position", "relative" )
+            , ( "display", "inline-block" )
+            , ( "height", "100%" )
+            , ( "width", "50%" )
+            , ( "box-sizing", "border-box" )
+            ]
+
+        InputLabel ->
+            [ ( "opacity", "0" )
+            ]
+
+        Input ->
+            [ ( "display", "block" )
+            , ( "padding", "8px 10px" )
+            , ( "height", "44px" )
+            , ( "box-sizing", "border-box" )
+            , ( "text-align", "center" )
+            , ( "margin", "0")
+            , ( "border", "0")
+            ]
+
+        InputDisplayTextContainer ->
+            [ ( "position", "absolute" )
+            , ( "top", "0" )
+            , ( "left", "0" )
+            , ( "box-sizing", "border-box" )
+            , ( "cursor", "pointer" )
+            , ( "width", "100%" )
+            , ( "margin-right", "6px" )
+            ]
+
+        InputDisplayText ->
+            [ ( "margin", "6px" )
+            , ( "padding", "4px 8px" )
+            , ( "height", "30px" )
+            , ( "box-sizing", "border-box" )
+            , ( "font-size", "16px" )
+            , ( "float", "left" )
+            ]
+
+        DatepickerContainer ->
+            [ ( "padding", "0.25em" )
+            , ( "width", "300px" )
+            , ( "border-radius", "2px" )
+            , ( "text-align", "center" )
+            , ( "box-sizing", "border-box" )
+            , ( "overflow", "hidden" )
+            ]
 
         MonthMenu ->
             [ ( "text-align", "center" )
@@ -40,6 +100,9 @@ getDefaultStyle view =
             , ( "padding", "0.5em 0.5em 0.75em 0.5em" )
             , ( "margin-right", "6px" )
             ]
+
+        Year ->
+            [ ( "padding", "0 0.25em" ) ]
 
         ArrowLeft ->
             [ ( "float", "left" )

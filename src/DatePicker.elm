@@ -1,9 +1,9 @@
 module DatePicker exposing (Model, Msg, view, init, initWithConfig, update, getNow)
 
 import Platform.Cmd as Cmd
-import Html exposing (Html, Attribute, text, div, span)
+import Html exposing (Html, Attribute, text, div, span, input, label)
 import Html.Events exposing (onClick)
-import Html.Attributes exposing (classList, style)
+import Html.Attributes exposing (classList, style, type', value, maxlength)
 import Date exposing (Date, toTime, fromTime, now, year, month, day)
 import Task exposing (perform)
 import Array exposing (initialize)
@@ -122,30 +122,71 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
+    div
+        [ styling model Style.Container ]
+        [ viewInputs model
+        , viewDatepicker model
+        ]
+
+
+viewInputs : Model -> Html Msg
+viewInputs model =
     let
         selected =
-            div
-                [ onClick (SetSelecting Start) ]
-                [ text (Helpers.dateAsString model.selected) ]
+            viewInput model Start
 
         selectedEnd =
-            div
-                [ onClick (SetSelecting End) ]
-                [ text (Helpers.dateAsString model.selectedEnd) ]
+            viewInput model End
 
-        datepicker =
-            div
-                [ styling model Style.Container ]
-                [ viewMonth model
-                , viewWeekdays model
-                , viewDays model
-                ]
-
-        children =
-          if model.config.useRange then [ selected, selectedEnd, datepicker ] else [ selected, datepicker ]
+        inputs =
+            if model.config.useRange then [ selected, selectedEnd ] else [ selected ]
     in
-        div [] children
+        div
+          [ styling model Style.InputsContainer ]
+          inputs
 
+viewInput : Model -> Choice -> Html Msg
+viewInput model choice =
+    let
+      value' =
+        case choice of
+            Start -> model.selected
+            End -> model.selectedEnd
+            None -> Just Helpers.defaultDate
+
+      placeholder =
+        case choice of
+            Start -> model.config.placeholderFrom
+            End -> model.config.placeholderTo
+            None -> ""
+    in
+      div [ styling model Style.InputContainer
+          , onClick (SetSelecting choice) ]
+          [ label
+              [ styling model Style.InputLabel ]
+              [ span [] []
+              , input
+                  [ styling model Style.Input
+                  , type' "text"
+                  , maxlength 10
+                  ]
+                  [ ]
+              ]
+          , div
+              [ styling model Style.InputDisplayTextContainer ]
+              [ span [ styling model Style.InputDisplayText ] [ text (Helpers.dateAsString placeholder value') ] ]
+          ]
+
+
+
+viewDatepicker : Model -> Html Msg
+viewDatepicker model =
+    div
+        [ styling model Style.DatepickerContainer ]
+        [ viewMonth model
+        , viewWeekdays model
+        , viewDays model
+        ]
 
 
 viewMonth : Model -> Html Msg

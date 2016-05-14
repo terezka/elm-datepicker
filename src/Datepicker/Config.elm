@@ -10,6 +10,8 @@ type alias Config =
     , useDefaultStyles : Bool
     , defaultDate : Date
     , useRange : Bool
+    , placeholderFrom : String
+    , placeholderTo : String
     }
 
 
@@ -39,4 +41,6 @@ defaultConfig =
     , useDefaultStyles = True
     , defaultDate = Helpers.defaultDate
     , useRange = False
+    , placeholderFrom = "From"
+    , placeholderTo = "To"
     }
