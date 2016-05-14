@@ -15,9 +15,12 @@ import Debug
 
 -- MODEL
 
+type Choice = Start | End | None
+
 
 type alias Model =
     { focused : Date
+    , selecting : Choice
     , selected : Maybe Date
     , selectedEnd : Maybe Date
     , config : Config.Config
@@ -39,6 +42,7 @@ getNow toParentMsg =
 init : Model
 init =
     { focused = Helpers.defaultDate
+    , selecting = None
     , selected = Nothing
     , selectedEnd = Nothing
     , config = Config.defaultConfig
@@ -48,6 +52,7 @@ init =
 initWithConfig : Config.Config -> Model
 initWithConfig config =
     { focused = config.defaultDate
+    , selecting = None
     , selected = Nothing
     , selectedEnd = Nothing
     , config = config
@@ -60,8 +65,8 @@ initWithConfig config =
 
 type Msg
     = SetFocused Date
-    | SetSelected (Maybe Date)
-    | SetSelectedEnd (Maybe Date)
+    | SetSelecting Choice
+    | SetSelected Choice (Maybe Date)
 
 
 update : Msg -> Model -> Model
@@ -70,11 +75,20 @@ update msg model =
         SetFocused date ->
             { model | focused = date }
 
-        SetSelected date ->
-            { model | selected = date }
+        SetSelecting choice ->
+            { model | selecting = choice }
 
-        SetSelectedEnd date ->
-            { model | selectedEnd = date }
+        SetSelected choice date ->
+            case choice of
+                Start ->
+                    { model | selected = date }
+
+                End ->
+                    { model | selectedEnd = date }
+
+                None ->
+                    model
+
 
 
 -- VIEW
@@ -82,17 +96,29 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ div
-            []
-            [ text (Helpers.dateAsString model.selected) ]
-        , div
-            [ styling model Style.Container ]
-            [ viewMonth model
-            , viewWeekdays model
-            , viewDays model
-            ]
-        ]
+    let
+        selected =
+            div
+                [ onClick (SetSelecting Start) ]
+                [ text (Helpers.dateAsString model.selected) ]
+
+        selectedEnd =
+            div
+                [ onClick (SetSelecting End) ]
+                [ text (Helpers.dateAsString model.selectedEnd) ]
+
+        datepicker =
+            div
+                [ styling model Style.Container ]
+                [ viewMonth model
+                , viewWeekdays model
+                , viewDays model
+                ]
+
+        children =
+          if model.config.useRange then [ selected, selectedEnd, datepicker ] else [ selected, datepicker ]
+    in
+        div [] children
 
 
 
@@ -183,7 +209,7 @@ viewDay model init diff =
     in
         div
             [ styling
-            , onClick (SetSelected <| Just date)
+            , onClick (SetSelected model.selecting <| Just date)
             ]
             [ text (toString (day date)) ]
 

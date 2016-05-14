@@ -29,6 +29,7 @@ init =
         config =
             Config.defaultConfig
                 |> Config.setGetClasses getClasses
+                |> Config.setUseRange True
     in
         ( Model (DatePicker.initWithConfig config), DatePicker.getNow DatePicker )
 
