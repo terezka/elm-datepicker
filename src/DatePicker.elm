@@ -99,7 +99,15 @@ update msg model =
                 End ->
                     case model.selected of
                         Just selected ->
-                            { model | selectedEnd = result }
+                            case result of
+                                Just date ->
+                                    if Helpers.isBefore selected date then
+                                        { model | selected = Just date, selectedEnd = Nothing }
+                                    else
+                                        { model | selectedEnd = Just date }
+
+                                Nothing ->
+                                    { model | selectedEnd = Nothing }
 
                         Nothing ->
                             { model | selectedEnd = result, choice = Start }
@@ -224,13 +232,10 @@ viewDay model init diff =
                     |> (++) ((?) highlighted (model.config.getClasses Style.DayHighlight))
                     |> (++) ((?) isNotCurrentMonth (model.config.getClasses Style.DayNotCurrentMonth))
                     |> classList
-
-        choice =
-            getChoice model date
     in
         div
             [ styling
-            , onClick (SetSelected choice <| Just date)
+            , onClick (SetSelected model.choice <| Just date)
             ]
             [ text (toString (day date)) ]
 
@@ -253,16 +258,3 @@ styling model view =
         style (Style.getDefaultStyle view)
     else
         classList (model.config.getClasses view)
-
-
-getChoice : Model -> Date -> Choice
-getChoice model date =
-    case model.selected of
-        Just selected ->
-            case model.choice of
-                End ->
-                    if Helpers.isBefore selected date then Start else End
-                _ ->
-                    model.choice
-        Nothing ->
-            model.choice
