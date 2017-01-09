@@ -3,19 +3,22 @@ module DatePicker exposing (Model, Msg, view, init, initWithConfig, update, getN
 import Platform.Cmd as Cmd
 import Html exposing (Html, Attribute, text, div, span, input, label)
 import Html.Events exposing (onClick)
-import Html.Attributes exposing (classList, style, type', value, maxlength)
+import Html.Attributes exposing (classList, style, type_, value, maxlength)
 import Date exposing (Date, toTime, fromTime, now, year, month, day)
 import Task exposing (perform)
 import Array exposing (initialize)
 import DatePicker.Helpers as Helpers
 import DatePicker.Style as Style
 import DatePicker.Config as Config
-import Debug
 
 
 -- MODEL
 
-type Choice = Start | End | None
+
+type Choice
+    = Start
+    | End
+    | None
 
 
 type alias Model =
@@ -31,10 +34,10 @@ getNow : (Msg -> a) -> Cmd a
 getNow toParentMsg =
     let
         failed =
-            (\_ -> SetFocused Helpers.defaultDate)
+            SetFocused Helpers.defaultDate
 
         cmd =
-            perform failed SetFocused Date.now
+            perform SetFocused Date.now
     in
         Cmd.map toParentMsg cmd
 
@@ -111,9 +114,9 @@ update msg model =
 
                         Nothing ->
                             { model | selectedEnd = result, choice = Start }
+
                 None ->
                     model
-
 
 
 
@@ -139,44 +142,49 @@ viewInputs model =
             viewInput model End
 
         inputs =
-            if model.config.useRange then [ selected, selectedEnd ] else [ selected ]
+            if model.config.useRange then
+                [ selected, selectedEnd ]
+            else
+                [ selected ]
     in
-        div
-          [ styling model Style.InputsContainer ]
-          inputs
+        div [ styling model Style.InputsContainer ] inputs
+
 
 viewInput : Model -> Choice -> Html Msg
 viewInput model choice =
     let
-      value' =
-        case choice of
-            Start -> model.selected
-            End -> model.selectedEnd
-            None -> Just Helpers.defaultDate
+        value_ =
+            case choice of
+                Start ->
+                    model.selected
 
-      placeholder =
-        case choice of
-            Start -> model.config.placeholderFrom
-            End -> model.config.placeholderTo
-            None -> ""
+                End ->
+                    model.selectedEnd
+
+                None ->
+                    Just Helpers.defaultDate
+
+        placeholder =
+            case choice of
+                Start ->
+                    model.config.placeholderFrom
+
+                End ->
+                    model.config.placeholderTo
+
+                None ->
+                    ""
     in
-      div [ styling model Style.InputContainer
-          , onClick (SetSelecting choice) ]
-          [ label
-              [ styling model Style.InputLabel ]
-              [ span [] []
-              , input
-                  [ styling model Style.Input
-                  , type' "text"
-                  , maxlength 10
-                  ]
-                  [ ]
-              ]
-          , div
-              [ styling model Style.InputDisplayTextContainer ]
-              [ span [ styling model Style.InputDisplayText ] [ text (Helpers.dateAsString placeholder value') ] ]
-          ]
-
+        div [ styling model Style.InputContainer, onClick (SetSelecting choice) ]
+            [ label
+                [ styling model Style.InputLabel ]
+                [ span [] []
+                , input [ styling model Style.Input, type_ "text", maxlength 10 ] []
+                ]
+            , div
+                [ styling model Style.InputDisplayTextContainer ]
+                [ span [ styling model Style.InputDisplayText ] [ text (Helpers.dateAsString placeholder value_) ] ]
+            ]
 
 
 viewDatepicker : Model -> Html Msg
@@ -202,20 +210,14 @@ viewMonth model =
             toString (month model.focused)
     in
         div [ styling model Style.MonthMenu ]
-            [ div
-                [ styling model Style.ArrowLeft
-                , onClick (SetFocused prevMonth)
-                ]
-                [ span [ styling model Style.ArrowLeftInner ] [ ] ]
+            [ div [ styling model Style.ArrowLeft, onClick (SetFocused prevMonth) ]
+                [ span [ styling model Style.ArrowLeftInner ] [] ]
             , span [ styling model Style.MonthContainer ]
                 [ span [ styling model Style.Month ] [ text monthString ]
                 , span [ styling model Style.Year ] [ text <| toString <| year model.focused ]
                 ]
-            , div
-                [ styling model Style.ArrowRight
-                , onClick (SetFocused nextMonth)
-                ]
-                [ span [ styling model Style.ArrowRightInner ] [ ] ]
+            , div [ styling model Style.ArrowRight, onClick (SetFocused nextMonth) ]
+                [ span [ styling model Style.ArrowRightInner ] [] ]
             ]
 
 
@@ -225,8 +227,8 @@ viewWeekdays model =
         days =
             [ "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su" ]
 
-        createDay =
-            (\day -> div [ styling model Style.WeekDay ] [ text day ])
+        createDay day =
+            div [ styling model Style.WeekDay ] [ text day ]
     in
         div [ styling model Style.WeekDays ]
             (List.map createDay days)
@@ -257,11 +259,12 @@ viewDay model init diff =
                     case model.selectedEnd of
                         Just selectedEnd ->
                             Helpers.isBetween selected selectedEnd date
+
                         Nothing ->
                             Helpers.equals selected date
+
                 Nothing ->
                     False
-
 
         isNotCurrentMonth =
             month date /= month model.focused

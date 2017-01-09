@@ -3,7 +3,6 @@ module DatePicker.Helpers exposing (defaultDate, dateAsString, equals, isBefore,
 import Date exposing (Date, Month, fromTime, fromString, year, month, day, dayOfWeek)
 import Result exposing (withDefault)
 import String
-import Debug
 
 
 -- Date stuff
@@ -28,14 +27,15 @@ dateAsString placeholder input =
     case input of
         Just date ->
             year date
-              |> toString
-              |> (++) " "
-              |> (++) (toString <| month date)
-              |> (++) " "
-              |> (++) (toString <| day date)
+                |> toString
+                |> (++) " "
+                |> (++) (toString <| month date)
+                |> (++) " "
+                |> (++) (toString <| day date)
 
         Nothing ->
             placeholder
+
 
 equals : Date -> Date -> Bool
 equals date1 date2 =
@@ -154,15 +154,15 @@ addMonth diff date =
 daysInMonth : Date -> Int
 daysInMonth date =
     let
-        year' =
+        year_ =
             year date
 
-        month' =
+        month_ =
             month date
     in
-        case month' of
+        case month_ of
             Date.Feb ->
-                if year' % 4 == 0 && year' % 100 /= 0 || year' % 400 == 0 then
+                if year_ % 4 == 0 && year_ % 100 /= 0 || year_ % 400 == 0 then
                     29
                 else
                     28
