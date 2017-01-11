@@ -30,16 +30,9 @@ type alias Model =
     }
 
 
-getNow : (Msg -> a) -> Cmd a
-getNow toParentMsg =
-    let
-        failed =
-            SetFocused Helpers.defaultDate
-
-        cmd =
-            perform SetFocused Date.now
-    in
-        Cmd.map toParentMsg cmd
+getNow : (Msg -> msg) -> Cmd msg
+getNow tagger =
+    perform (tagger << SetFocused) Date.now
 
 
 init : Model
@@ -125,27 +118,18 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div
-        [ styling model Style.Container ]
-        [ viewInputs model
-        , viewDatepicker model
-        ]
+    div [ styling model Style.Container ]
+        [ viewInputs model, viewDatepicker model ]
 
 
 viewInputs : Model -> Html Msg
 viewInputs model =
     let
-        selected =
-            viewInput model Start
-
-        selectedEnd =
-            viewInput model End
-
         inputs =
             if model.config.useRange then
-                [ selected, selectedEnd ]
+                [ viewInput model Start, viewInput model End ]
             else
-                [ selected ]
+                [ viewInput model Start ]
     in
         div [ styling model Style.InputsContainer ] inputs
 
@@ -176,13 +160,11 @@ viewInput model choice =
                     ""
     in
         div [ styling model Style.InputContainer, onClick (SetSelecting choice) ]
-            [ label
-                [ styling model Style.InputLabel ]
+            [ label [ styling model Style.InputLabel ]
                 [ span [] []
                 , input [ styling model Style.Input, type_ "text", maxlength 10 ] []
                 ]
-            , div
-                [ styling model Style.InputDisplayTextContainer ]
+            , div [ styling model Style.InputDisplayTextContainer ]
                 [ span [ styling model Style.InputDisplayText ] [ text (Helpers.dateAsString placeholder value_) ] ]
             ]
 
@@ -281,10 +263,7 @@ viewDay model init diff =
                     |> (++) ((?) isNotCurrentMonth (model.config.getClasses Style.DayNotCurrentMonth))
                     |> classList
     in
-        div
-            [ styling
-            , onClick (SetSelected model.choice <| Just date)
-            ]
+        div [ styling, onClick (SetSelected model.choice <| Just date) ]
             [ text (toString (day date)) ]
 
 
