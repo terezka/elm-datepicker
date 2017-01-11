@@ -61,8 +61,8 @@ getDefaultStyle view =
             , ( "height", "44px" )
             , ( "box-sizing", "border-box" )
             , ( "text-align", "center" )
-            , ( "margin", "0")
-            , ( "border", "0")
+            , ( "margin", "0" )
+            , ( "border", "0" )
             ]
 
         InputDisplayTextContainer ->
